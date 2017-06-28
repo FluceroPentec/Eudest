@@ -754,6 +754,7 @@ class local_eudest {
         $noticermoninactivity18 = $CFG->local_eudest_inac18notice;
         $noticermoninactivity24 = $CFG->local_eudest_inac24notice;
         $lockuseroninactivity24 = $noticeuseroninactivity24 = $noticermoninactivity24;
+        $type = strpos($CFG->dbtype, 'pgsql');
 
         // Get users inactives for 6 months.
         if ($noticermoninactivity6) {
