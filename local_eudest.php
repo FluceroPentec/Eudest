@@ -765,7 +765,7 @@ class local_eudest {
                                     (DATE_PART('year', NOW()) -
                                     DATE_PART('year', to_timestamp(max(timeaccess)))) * 12 +
                                     (DATE_PART('month', NOW()) -
-                                    DATE_PART('month', to_timestamp(max(timeaccess)))) AS num_month
+                                    DATE_PART('month', to_timestamp(max(timeaccess)))) AS num_months
                               FROM {user_lastaccess} ula
                              GROUP BY userid
                             HAVING num_months >= 6) AS la
