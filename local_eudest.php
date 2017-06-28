@@ -767,8 +767,8 @@ class local_eudest {
                              GROUP BY userid
                             HAVING num_months >= 6) la
                      WHERE la.userid = u.userid
-                       AND startdate < $datetoday
-                       AND enddate > $datetoday
+                       AND startdate < NOW()
+                       AND enddate > NOW()
                        AND inactivity6 = 0";
             } else {
                 $sql = "SELECT u.*
