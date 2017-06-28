@@ -946,9 +946,10 @@ class local_eudest {
 
         $sql = "SELECT DISTINCT(e.id) uniqueid, e.*, gi.id itemid, gg.finalgrade
                   FROM {local_eudest_enrols} e
-                  LEFT JOIN {grade_items} gi on e.courseid = gi.courseid and itemtype='course'
-                  LEFT JOIN {grade_grades} gg on gg.itemid = gi.id
+                  JOIN {grade_items} gi ON e.courseid = gi.courseid
+                  JOIN {grade_grades} gg ON gg.itemid = gi.id
                  WHERE e.pend_convalidation = 1
+                   AND gi.itemtype='course'
                    AND e.intensive = 0
               ORDER BY e.userid, e.startdate ASC";
         $records = $DB->get_records_sql($sql, array());
@@ -962,11 +963,11 @@ class local_eudest {
 
                 $sqlgrade = "SELECT gi.id itemid, gi.courseid, gg.userid, gi.grademax, gg.finalgrade, gg.information
                                FROM {grade_items} gi
-                               JOIN {grade_grades} gg on gg.itemid = gi.id
-                               JOIN {course} c on gi.courseid = c.id
+                               JOIN {grade_grades} gg ON gg.itemid = gi.id
+                               JOIN {course} c ON gi.courseid = c.id
                               WHERE gi.itemtype = 'course'
                                 AND c.shortname like CONCAT('%', '$cod')
-                                AND gg.finalgrade is not null
+                                AND gg.finalgrade IS NOT NULL
                                 AND gg.userid = :userid
                                 AND gi.courseid != :courseid
                            ORDER BY gi.grademax desc";
