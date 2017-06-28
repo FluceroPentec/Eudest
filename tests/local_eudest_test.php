@@ -1960,11 +1960,15 @@ class local_eudest_testcase extends advanced_testcase {
     public function test_getcategory() {
 
         $this->resetAfterTest(true);
+
         $instance1 = new local_eudest();
+
         $category1 = $this->getDataGenerator()->create_category(array('name' => 'Category 1'));
         $this->assertNotEmpty($category1->id);
+
         $category = $this->invoke_method($instance1, 'get_category', array($category1->id));
         $this->assertNotEmpty($category);
         $this->assertequals($category->name, 'Category 1');
+
     }
 }
