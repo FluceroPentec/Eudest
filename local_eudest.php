@@ -760,7 +760,7 @@ class local_eudest {
         if ($noticermoninactivity6) {
             if ($type || $type === 0) {
                 $today = time();
-                $sixm = 86400 * 183;
+                $sixm = 86400 * 180;
                 $sixdate = $today - $sixm;
                 $useridsql = "SELECT DISTINCT userid
                                 FROM {user_lastaccess}
@@ -769,17 +769,22 @@ class local_eudest {
                 echo "user id result:   "; var_dump($useridresult);
                 $userlist = array ();
                 foreach ($useridresult as $userid) {
-                    array_push($userlist, $userid);
+                    array_push($userlist, $userid->userid);
                 }
-                echo "userlist   "; var_dump($userlist);
-                list($inusers, $userparams) = $DB->get_in_or_equal($userlist);
-                $sql = "SELECT DISTINCT u.*
+                echo "userlist 1  "; var_dump($userlist);
+                $mastersql = "SELECT DISTINCT u.*
                           FROM {local_eudest_masters}
-                         WHERE id NOT $inusers 
-                           AND startdate < NOW()
+                         WHERE startdate < NOW()
                            AND enddate > NOW()
                            AND inactivity6 = 0";
-                $records = $DB->get_records_sql($sql, array($userparams));  
+                $masterresult = $DB->get_records_sql($mastersql, array());  
+                echo "Master result 2"; var_dump($masterresult);
+                $masterlist = array();
+                foreach ($masterresult as $master) {
+                    array_push($masterlist, $master->userid);
+                }
+                $users = array_diff($masterlist, $userlist);
+                echo "Lista de usuarios DEFINITIVA  3"; var_dump($users);
             } else {
                 $sql = "SELECT u.*
                       FROM {local_eudest_masters} u,
