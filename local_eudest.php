@@ -762,6 +762,8 @@ class local_eudest {
                 $today = time();
                 $sixm = 86400 * 180;
                 $sixdate = $today - $sixm;
+                
+                // Get all users logged within 6 months.
                 $useridsql = "SELECT DISTINCT userid
                                 FROM {user_lastaccess}
                                WHERE timeaccess > $sixdate";
@@ -772,6 +774,8 @@ class local_eudest {
                     array_push($userlist, $userid->userid);
                 }
                 echo "userlist 1  "; var_dump($userlist);
+                
+                // Get data from actual master.
                 $mastersql = "SELECT DISTINCT *
                           FROM {local_eudest_masters} 
                          WHERE startdate < $today
@@ -783,15 +787,15 @@ class local_eudest {
                 foreach ($masterresult as $master) {
                     array_push($masterlist, $master->userid);
                 }
+                // Compare the user arrays and get the users from master who dont appear in lastaccess array.
                 $users = array_diff($masterlist, $userlist);
                 echo "Lista de usuarios DEFINITIVA  3"; var_dump($users);
                 $records = array();
                 foreach ($masterresult as $master) {
-                    if (in_array($users)) {
+                    if (in_array($master->userid, $users)) {
                         array_push($records, $master);
                     }
                 }
-                 
             } else {
                 $sql = "SELECT u.*
                       FROM {local_eudest_masters} u,
