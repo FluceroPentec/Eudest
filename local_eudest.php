@@ -762,7 +762,7 @@ class local_eudest {
                 $sql = "SELECT u.*
                       FROM {local_eudest_masters} u,
                            (SELECT userid,
-                                    date_part('month',max(timeaccess)) - date_part('month',time()) num_months
+                                    date_part('month',to_timestamp(max(timeaccess)) - NOW()) num_month
                               FROM {user_lastaccess} la
                              GROUP BY userid
                             HAVING num_months >= 6) 
