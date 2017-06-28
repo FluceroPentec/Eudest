@@ -773,6 +773,7 @@ class local_eudest {
                        AND startdate < NOW()
                        AND enddate > NOW()
                        AND inactivity6 = 0";
+
             } else {
                 $sql = "SELECT u.*
                       FROM {local_eudest_masters} u,
