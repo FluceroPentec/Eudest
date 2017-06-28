@@ -774,8 +774,8 @@ class local_eudest {
                 echo "userlist 1  "; var_dump($userlist);
                 $mastersql = "SELECT DISTINCT *
                           FROM {local_eudest_masters} 
-                         WHERE startdate < NOW()
-                           AND enddate > NOW()
+                         WHERE startdate < $today
+                           AND enddate > $today
                            AND inactivity6 = 0";
                 $masterresult = $DB->get_records_sql($mastersql, array());  
                 echo "Master result 2"; var_dump($masterresult);
@@ -785,6 +785,13 @@ class local_eudest {
                 }
                 $users = array_diff($masterlist, $userlist);
                 echo "Lista de usuarios DEFINITIVA  3"; var_dump($users);
+                $records = array();
+                foreach ($masterresult as $master) {
+                    if (in_array($users)) {
+                        array_push($records, $master);
+                    }
+                }
+                 
             } else {
                 $sql = "SELECT u.*
                       FROM {local_eudest_masters} u,
