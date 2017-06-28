@@ -762,10 +762,11 @@ class local_eudest {
                 $sql = "SELECT u.*
                       FROM {local_eudest_masters} u,
                            (SELECT userid,
-                                    date_part('month',to_timestamp(max(timeaccess)) - NOW()) num_month
-                              FROM {user_lastaccess} la
+                                    date_part('month', to_date(to_timestamp(max(timeaccess)))) - 
+                                    date_part(NOW()) AS 'num_month'
+                              FROM {user_lastaccess} ula
                              GROUP BY userid
-                            HAVING num_months >= 6) AS mo
+                            HAVING num_months >= 6) AS 'la'
                      WHERE la.userid = u.userid
                        AND startdate < NOW()
                        AND enddate > NOW()
@@ -777,9 +778,9 @@ class local_eudest {
                                    TIMESTAMPDIFF(MONTH,
                                       FROM_UNIXTIME(max(timeaccess),'%Y-%m-%d'),
                                       FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d')) num_month
-                              FROM {user_lastaccess} la
+                              FROM {user_lastaccess} ula
                              GROUP BY userid
-                            HAVING num_months >= 6) mo
+                            HAVING num_months >= 6) la
                      WHERE la.userid = u.userid
                        AND startdate < UNIX_TIMESTAMP()
                        AND enddate > UNIX_TIMESTAMP()
