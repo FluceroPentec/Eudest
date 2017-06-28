@@ -772,8 +772,8 @@ class local_eudest {
                     array_push($userlist, $userid->userid);
                 }
                 echo "userlist 1  "; var_dump($userlist);
-                $mastersql = "SELECT DISTINCT u.*
-                          FROM {local_eudest_masters}
+                $mastersql = "SELECT DISTINCT *
+                          FROM {local_eudest_masters} 
                          WHERE startdate < NOW()
                            AND enddate > NOW()
                            AND inactivity6 = 0";
