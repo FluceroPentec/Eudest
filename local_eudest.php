@@ -757,7 +757,20 @@ class local_eudest {
 
         // Get users inactives for 6 months.
         if ($noticermoninactivity6) {
-            $sql = "SELECT u.*
+            if ($type || $type === 0) {
+                $sql = "SELECT u.*
+                      FROM {local_eudest_masters} u,
+                           (SELECT userid,
+                                    date_part('month',max(timeaccess)) - date_part('month',time())) num_months
+                              FROM {user_lastaccess}
+                             GROUP BY userid
+                            HAVING num_months >= 6) la
+                     WHERE la.userid = u.userid
+                       AND startdate < $datetoday
+                       AND enddate > $datetoday
+                       AND inactivity6 = 0";
+            } else {
+                $sql = "SELECT u.*
                       FROM {local_eudest_masters} u,
                            (SELECT userid,
                                    TIMESTAMPDIFF(MONTH,
@@ -770,6 +783,7 @@ class local_eudest {
                        AND startdate < UNIX_TIMESTAMP()
                        AND enddate > UNIX_TIMESTAMP()
                        AND inactivity6 = 0";
+            }
             $records = $DB->get_records_sql($sql, array());
             foreach ($records as $record) {
                 $rm = $this->eude_get_rm($record->categoryid);
@@ -783,18 +797,31 @@ class local_eudest {
         }
 
         // Get users inactives for 18 months after finish the master.
-        $sql = "SELECT u.*, la.num_months
-                  FROM {local_eudest_masters} u,
-                       (SELECT userid,
-                               TIMESTAMPDIFF(MONTH,
-                                             FROM_UNIXTIME(max(timeaccess),'%Y-%m-%d'),
-                                             FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d')) num_months
-                          FROM {user_lastaccess}
-                         GROUP BY userid
-                        HAVING num_months >= 18) la
-                 WHERE la.userid = u.userid
-		   AND UNIX_TIMESTAMP(TIMESTAMPADD(MONTH,18,FROM_UNIXTIME( enddate ))) < UNIX_TIMESTAMP()
-                   AND inactivity18 = 0;";
+        if ($type || $type === 0) {
+                $sql = "SELECT u.*
+                      FROM {local_eudest_masters} u,
+                           (SELECT userid,
+                                    DATEDIFF(month, max(timeaccess), time()) num_months
+                              FROM {user_lastaccess}
+                             GROUP BY userid
+                            HAVING num_months >= 18) la
+                     WHERE la.userid = u.userid
+                           AND UNIX_TIMESTAMP(TIMESTAMPADD(MONTH,18,FROM_UNIXTIME( enddate ))) < UNIX_TIMESTAMP()
+                           AND inactivity18 = 0;";
+        } else {
+                $sql = "SELECT u.*, la.num_months
+                          FROM {local_eudest_masters} u,
+                               (SELECT userid,
+                                       TIMESTAMPDIFF(MONTH,
+                                                     FROM_UNIXTIME(max(timeaccess),'%Y-%m-%d'),
+                                                     FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d')) num_months
+                                  FROM {user_lastaccess}
+                                 GROUP BY userid
+                                HAVING num_months >= 18) la
+                         WHERE la.userid = u.userid
+                           AND UNIX_TIMESTAMP(TIMESTAMPADD(MONTH,18,FROM_UNIXTIME( enddate ))) < UNIX_TIMESTAMP()
+                           AND inactivity18 = 0;";
+        }
         $records = $DB->get_records_sql($sql, array());
         foreach ($records as $record) {
             $inactivitytime = $record->num_months;
@@ -944,12 +971,11 @@ class local_eudest {
             return 0;
         }
 
-        $sql = "SELECT DISTINCT(e.id) uniqueid, e.*, gi.id itemid, gg.finalgrade
+        $sql = "SELECT distinct(gi.id) uniqueid, e.*, gi.id itemid, gg.finalgrade
                   FROM {local_eudest_enrols} e
-                  JOIN {grade_items} gi ON e.courseid = gi.courseid
-                  JOIN {grade_grades} gg ON gg.itemid = gi.id
+                  LEFT JOIN {grade_items} gi on e.courseid = gi.courseid and itemtype='course'
+                  LEFT JOIN {grade_grades} gg on gg.itemid = gi.id
                  WHERE e.pend_convalidation = 1
-                   AND gi.itemtype='course'
                    AND e.intensive = 0
               ORDER BY e.userid, e.startdate ASC";
         $records = $DB->get_records_sql($sql, array());
@@ -963,11 +989,11 @@ class local_eudest {
 
                 $sqlgrade = "SELECT gi.id itemid, gi.courseid, gg.userid, gi.grademax, gg.finalgrade, gg.information
                                FROM {grade_items} gi
-                               JOIN {grade_grades} gg ON gg.itemid = gi.id
-                               JOIN {course} c ON gi.courseid = c.id
+                               JOIN {grade_grades} gg on gg.itemid = gi.id
+                               JOIN {course} c on gi.courseid = c.id
                               WHERE gi.itemtype = 'course'
                                 AND c.shortname like CONCAT('%', '$cod')
-                                AND gg.finalgrade IS NOT NULL
+                                AND gg.finalgrade is not null
                                 AND gg.userid = :userid
                                 AND gi.courseid != :courseid
                            ORDER BY gi.grademax desc";
@@ -1009,14 +1035,13 @@ class local_eudest {
         $msginac24subject = new lang_string('inac24_subject', $this->pluginname);
 
         $from = $this->get_admin();
-
+        $todaydate = date_create(time(), 'Y-m-d');
         $sql = "SELECT *
-                  FROM {local_eudest_msgs}
-                 WHERE sended = 0
-                   AND msgdate = UNIX_TIMESTAMP(FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d'))";
+                      FROM {local_eudest_msgs}
+                     WHERE sended = 0
+                       AND msgdate = $todaydate";
         $records = $DB->get_records_sql($sql, array());
         foreach ($records as $record) {
-
             $categoryid = $record->categoryid;
             $target = $record->msgtarget;
             $msgtype = $record->msgtype;
