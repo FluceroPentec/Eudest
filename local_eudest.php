@@ -760,21 +760,26 @@ class local_eudest {
         if ($noticermoninactivity6) {
             if ($type || $type === 0) {
                 $today = time();
-                $sixm = 8640000 * 183;
+                $sixm = 86400 * 183;
                 $sixdate = $today - $sixm;
                 $useridsql = "SELECT DISTINCT userid
                                 FROM {user_lastaccess}
-                               WHERE timeaccess < $sixdate";
+                               WHERE timeaccess > $sixdate";
                 $useridresult = $DB->get_records_sql($useridsql, array());
+                echo "user id result:   "; var_dump($useridresult);
                 $userlist = array ();
                 foreach ($useridresult as $userid) {
                     array_push($userlist, $userid);
                 }
+                echo "userlist   "; var_dump($userlist);
                 list($inusers, $userparams) = $DB->get_in_or_equal($userlist);
                 $sql = "SELECT DISTINCT u.*
-                          FROM {user}
-                         WHERE id $inusers";
-                $records = $DB->get_records_sql($sql, $userparams);  
+                          FROM {local_eudest_masters}
+                         WHERE id NOT $inusers 
+                           AND startdate < NOW()
+                           AND enddate > NOW()
+                           AND inactivity6 = 0";
+                $records = $DB->get_records_sql($sql, array($userparams));  
             } else {
                 $sql = "SELECT u.*
                       FROM {local_eudest_masters} u,
