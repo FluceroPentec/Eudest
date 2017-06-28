@@ -755,7 +755,7 @@ class local_eudest {
         $noticermoninactivity24 = $CFG->local_eudest_inac24notice;
         $lockuseroninactivity24 = $noticeuseroninactivity24 = $noticermoninactivity24;
         $type = strpos($CFG->dbtype, 'pgsql');
-
+        // $today = time();
         // Get users inactives for 6 months.
         if ($noticermoninactivity6) {
             if ($type || $type === 0) {
@@ -765,10 +765,10 @@ class local_eudest {
                                     (DATE_PART('year', NOW()) -
                                     DATE_PART('year', to_timestamp(max(timeaccess)))) * 12 +
                                     (DATE_PART('month', NOW()) -
-                                    DATE_PART('month', to_timestamp(max(timeaccess))))
+                                    DATE_PART('month', to_timestamp(max(timeaccess)))) AS num_month
                               FROM {user_lastaccess} ula
                              GROUP BY userid
-                            HAVING num_months >= 6) AS 'la'
+                            HAVING num_months >= 6) AS la
                      WHERE la.userid = u.userid
                        AND startdate < NOW()
                        AND enddate > NOW()
@@ -779,10 +779,10 @@ class local_eudest {
                            (SELECT userid,
                                    TIMESTAMPDIFF(MONTH,
                                       FROM_UNIXTIME(max(timeaccess),'%Y-%m-%d'),
-                                      FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d')) 'num_month'
-                              FROM {user_lastaccess} ula
+                                      FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d')) num_months
+                              FROM {user_lastaccess}
                              GROUP BY userid
-                            HAVING num_months >= 6) AS 'la'
+                            HAVING num_months >= 6) la
                      WHERE la.userid = u.userid
                        AND startdate < UNIX_TIMESTAMP()
                        AND enddate > UNIX_TIMESTAMP()
@@ -805,7 +805,9 @@ class local_eudest {
                 $sql = "SELECT u.*
                       FROM {local_eudest_masters} u,
                            (SELECT userid,
-                                    DATEDIFF(month, max(timeaccess), time()) num_months
+                                    DATEDIFF(month, 
+                                        to_char(max(timeaccess), 'MM'), 
+                                        to_char(current_timestamp, 'MM'))) num_months
                               FROM {user_lastaccess}
                              GROUP BY userid
                             HAVING num_months >= 18) la
@@ -1039,7 +1041,7 @@ class local_eudest {
         $msginac24subject = new lang_string('inac24_subject', $this->pluginname);
 
         $from = $this->get_admin();
-        $todaydate = date_create(time(), 'Y-m-d');
+        $todaydate = time();
         $sql = "SELECT *
                       FROM {local_eudest_msgs}
                      WHERE sended = 0
