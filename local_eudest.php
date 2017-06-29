@@ -778,9 +778,7 @@ class local_eudest {
                 // Get data from actual master.
                 $mastersql = "SELECT DISTINCT *
                           FROM {local_eudest_masters} 
-                         WHERE startdate < $today
-                           AND enddate > $today
-                           AND inactivity6 = 0";
+                         WHERE inactivity6 = 0";
                 $masterresult = $DB->get_records_sql($mastersql, array());  
                 echo "Master result 2"; var_dump($masterresult);
                 $masterlist = array();
@@ -826,18 +824,7 @@ class local_eudest {
 
         // Get users inactives for 18 months after finish the master.
         if ($type || $type === 0) {
-                $sql = "SELECT u.*
-                      FROM {local_eudest_masters} u,
-                           (SELECT userid,
-                                    DATEDIFF(month, 
-                                        to_char(max(timeaccess), 'MM'), 
-                                        to_char(current_timestamp, 'MM'))) num_months
-                              FROM {user_lastaccess}
-                             GROUP BY userid
-                            HAVING num_months >= 18) la
-                     WHERE la.userid = u.userid
-                           AND UNIX_TIMESTAMP(TIMESTAMPADD(MONTH,18,FROM_UNIXTIME( enddate ))) < UNIX_TIMESTAMP()
-                           AND inactivity18 = 0;";
+                
         } else {
                 $sql = "SELECT u.*, la.num_months
                           FROM {local_eudest_masters} u,
