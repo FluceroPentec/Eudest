@@ -755,7 +755,6 @@ class local_eudest {
         $noticermoninactivity24 = $CFG->local_eudest_inac24notice;
         $lockuseroninactivity24 = $noticeuseroninactivity24 = $noticermoninactivity24;
         $type = strpos($CFG->dbtype, 'pgsql');
-        
         // Get users inactives for 6 months.
         if ($noticermoninactivity6) {
             if ($type || $type === 0) {
@@ -838,8 +837,9 @@ class local_eudest {
                          WHERE la.userid = u.userid
                            AND UNIX_TIMESTAMP(TIMESTAMPADD(MONTH,18,FROM_UNIXTIME( enddate ))) < UNIX_TIMESTAMP()
                            AND inactivity18 = 0;";
+                $records = $DB->get_records_sql($sql, array());
         }
-        $records = $DB->get_records_sql($sql, array());
+        
         foreach ($records as $record) {
             $inactivitytime = $record->num_months;
             $inactive18 = $inactive24 = 0;
