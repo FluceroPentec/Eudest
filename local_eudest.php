@@ -742,7 +742,7 @@ class local_eudest {
 
         // Get the last check inactivity date.
         $lastcheck = $this->eudeconfig->last_inactivity_date;
-        $today = strtotime('00:00');
+        $today = time();
 
         // Only one check by day.
         if ($lastcheck == $today) {
@@ -754,62 +754,34 @@ class local_eudest {
         $noticermoninactivity18 = $CFG->local_eudest_inac18notice;
         $noticermoninactivity24 = $CFG->local_eudest_inac24notice;
         $lockuseroninactivity24 = $noticeuseroninactivity24 = $noticermoninactivity24;
+
+        // Database specific functions.
+        $bdtimestamp = "UNIX_TIMESTAMP()";
+        $nummonthsfunction = "TIMESTAMPDIFF(MONTH, FROM_UNIXTIME(max(timeaccess),'%Y-%m-%d'),
+                FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d'))";
+        $add18months = "UNIX_TIMESTAMP(TIMESTAMPADD(MONTH,18,FROM_UNIXTIME( enddate )))";
         $type = strpos($CFG->dbtype, 'pgsql');
+        if ($type || $type === 0) {
+            $bdtimestamp = "EXTRACT(EPOCH FROM(CURRENT_TIMESTAMP))";
+            $nummonthsfunction = "(DATE_PART('year', CURRENT_TIMESTAMP) - DATE_PART('year', TO_TIMESTAMP(max(timeaccess)))) * 12 +
+                                  (DATE_PART('month', CURRENT_TIMESTAMP) -
+                                        DATE_PART('month', TO_TIMESTAMP(max(timeaccess))))";
+            $add18months = "extract(epoch from (TO_TIMESTAMP(enddate) + INTERVAL '18 month'))";
+        }
         // Get users inactives for 6 months.
         if ($noticermoninactivity6) {
-            if ($type || $type === 0) {
-                $today = time();
-                $sixm = 86400 * 180;
-                $sixdate = $today - $sixm;
-                
-                // Get all users logged within 6 months.
-                $useridsql = "SELECT DISTINCT userid
-                                FROM {user_lastaccess}
-                               WHERE timeaccess > $sixdate";
-                $useridresult = $DB->get_records_sql($useridsql, array());
-                echo "user id result:   "; var_dump($useridresult);
-                $userlist = array ();
-                foreach ($useridresult as $userid) {
-                    array_push($userlist, $userid->userid);
-                }
-                echo "userlist 1  "; var_dump($userlist);
-                
-                // Get data from actual master.
-                $mastersql = "SELECT DISTINCT *
-                          FROM {local_eudest_masters} 
-                         WHERE inactivity6 = 0";
-                $masterresult = $DB->get_records_sql($mastersql, array());  
-                echo "Master result 2"; var_dump($masterresult);
-                $masterlist = array();
-                foreach ($masterresult as $master) {
-                    array_push($masterlist, $master->userid);
-                }
-                // Compare the user arrays and get the users from master who dont appear in lastaccess array.
-                $users = array_diff($masterlist, $userlist);
-                echo "Lista de usuarios DEFINITIVA  3"; var_dump($users);
-                $records = array();
-                foreach ($masterresult as $master) {
-                    if (in_array($master->userid, $users)) {
-                        array_push($records, $master);
-                    }
-                }
-            } else {
-                $sql = "SELECT u.*
-                      FROM {local_eudest_masters} u,
-                           (SELECT userid,
-                                   TIMESTAMPDIFF(MONTH,
-                                      FROM_UNIXTIME(max(timeaccess),'%Y-%m-%d'),
-                                      FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d')) num_months
-                              FROM {user_lastaccess}
-                             GROUP BY userid
-                            HAVING num_months >= 6) la
-                     WHERE la.userid = u.userid
-                       AND startdate < UNIX_TIMESTAMP()
-                       AND enddate > UNIX_TIMESTAMP()
-                       AND inactivity6 = 0";
-                $records = $DB->get_records_sql($sql, array());
-            }
-
+            $sql = "SELECT u.*
+                  FROM {local_eudest_masters} u,
+                       (SELECT userid,
+                               $nummonthsfunction as num_months
+                          FROM {user_lastaccess}
+                         GROUP BY userid
+                        HAVING $nummonthsfunction >= 6) la
+                 WHERE la.userid = u.userid
+                   AND startdate < $bdtimestamp
+                   AND enddate > $bdtimestamp
+                   AND inactivity6 = 0";
+            $records = $DB->get_records_sql($sql, array());
             foreach ($records as $record) {
                 $rm = $this->eude_get_rm($record->categoryid);
                 // Add message to stack.
@@ -820,26 +792,19 @@ class local_eudest {
                 $DB->update_record('local_eudest_masters', $record);
             }
         }
-
         // Get users inactives for 18 months after finish the master.
-        if ($type || $type === 0) {
-                
-        } else {
-                $sql = "SELECT u.*, la.num_months
-                          FROM {local_eudest_masters} u,
-                               (SELECT userid,
-                                       TIMESTAMPDIFF(MONTH,
-                                                     FROM_UNIXTIME(max(timeaccess),'%Y-%m-%d'),
-                                                     FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d')) num_months
-                                  FROM {user_lastaccess}
-                                 GROUP BY userid
-                                HAVING num_months >= 18) la
-                         WHERE la.userid = u.userid
-                           AND UNIX_TIMESTAMP(TIMESTAMPADD(MONTH,18,FROM_UNIXTIME( enddate ))) < UNIX_TIMESTAMP()
-                           AND inactivity18 = 0;";
-                $records = $DB->get_records_sql($sql, array());
-        }
-        
+        $sql = "SELECT u.*, la.num_months
+                  FROM {local_eudest_masters} u,
+                       (SELECT userid,
+                               $nummonthsfunction as num_months
+                          FROM {user_lastaccess}
+                         GROUP BY userid
+                        HAVING $nummonthsfunction >= 18) la
+                 WHERE la.userid = u.userid
+                   AND $add18months < $bdtimestamp
+                   AND inactivity18 = 0;";
+
+        $records = $DB->get_records_sql($sql, array());
         foreach ($records as $record) {
             $inactivitytime = $record->num_months;
             $inactive18 = $inactive24 = 0;
@@ -1056,8 +1021,8 @@ class local_eudest {
         $sql = "SELECT *
                       FROM {local_eudest_msgs}
                      WHERE sended = 0
-                       AND msgdate = $todaydate";
-        $records = $DB->get_records_sql($sql, array());
+                       AND msgdate = :todaydate";
+        $records = $DB->get_records_sql($sql, array("todaydate" => $todaydate));
         foreach ($records as $record) {
             $categoryid = $record->categoryid;
             $target = $record->msgtarget;

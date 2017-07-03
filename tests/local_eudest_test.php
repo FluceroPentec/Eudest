@@ -1911,7 +1911,6 @@ class local_eudest_testcase extends advanced_testcase {
         // Test Sended messages after use the function.
         $messages5 = $DB->get_records('local_eudest_msgs', array());
         $this->assertCount(0, $messages5);
-
     }
 
     /**
