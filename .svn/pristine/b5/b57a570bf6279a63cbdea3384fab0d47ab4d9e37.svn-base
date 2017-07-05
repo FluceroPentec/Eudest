@@ -41,7 +41,7 @@ $string['customizemessage_enroldesc'] = 'Personaliza tu mensaje al repsonsable p
         . ' Nota: el parámetro [[USER]] será reemplazado por el usuario de referencia';
 $string['holidaynotice'] = 'Aviso de vacaciones';
 $string['holidaynotice_desc'] = 'Aviso de las vacaciones con antelación de tres días';
-$string['customizemessage_holiday'] = 'Personaliza tu mensaje para los avisos de vacaciones';
+$string['customizemessage_holiday'] = 'Peronsaliza tu mensaje para los avisos de vacaciones';
 // Master end.
 $string['masterend'] = 'Al finalizar el master';
 $string['rmfinishnotice'] = 'Aviso de finalización del master (Responsable)';

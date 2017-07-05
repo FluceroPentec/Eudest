@@ -896,14 +896,14 @@ class local_eudest {
             // Get actual grade value.
             $lastcheck = $record->timemodified;
             $userid = $record->userid;
-            $shortname = str_replace("$this->intensivetag", "", $record->shortname);
+            $shortname = str_replace("$this->intensivetag.", "", $record->shortname);
 
             $sql2 = "SELECT gi.id itemid, gi.courseid, gi.grademax, gg.id gradeid, gg.userid, gg.finalgrade, gg.information
                        FROM {grade_items} gi
                   LEFT JOIN {grade_grades} gg on gg.itemid = gi.id and userid = :userid
                        JOIN {course} c on gi.courseid = c.id
                       WHERE gi.itemtype = 'course'
-                        AND shortname LIKE '%:shortname'";
+                        AND shortname = :shortname";
             $module = $DB->get_record_sql($sql2, array("userid" => $userid, "shortname" => $shortname));
 
             $actualcalification = 0;
