@@ -25,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-require_once(__DIR__. '/../local_eudest.php');
+require_once(__DIR__ . '/../local_eudest.php');
 
 /**
  * This class is used to run the unit tests
@@ -77,12 +77,13 @@ class local_eudest_testcase extends advanced_testcase {
         $reflectionproperty->setAccessible(true);
         $reflectionproperty->setValue($obj, $value);
     }
+
     /**
      * Enable the manual enrol plugin.
      *
      * @return bool $manualplugin Return true if is enabled.
      */
-    public function enable_enrol_plugin() {
+    public function enable_enrol_plugin () {
         $manualplugin = enrol_get_plugin('manual');
         return $manualplugin;
     }
@@ -92,7 +93,7 @@ class local_eudest_testcase extends advanced_testcase {
      *
      * @return stdClass $studentrole Object student role record.
      */
-    public function get_student_role() {
+    public function get_student_role () {
         global $DB;
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         return $studentrole;
@@ -103,7 +104,7 @@ class local_eudest_testcase extends advanced_testcase {
      *
      * @return stdClass $teacherrole Object teacher role record.
      */
-    public function get_teacher_role() {
+    public function get_teacher_role () {
         global $DB;
         $teacherrole = $DB->get_record('role', array('shortname' => 'teacher'));
         return $teacherrole;
@@ -115,7 +116,7 @@ class local_eudest_testcase extends advanced_testcase {
      *
      * @return stdClass $manualinstance Object type of enrol to be enrolled.
      */
-    public function create_manual_instance($courseid) {
+    public function create_manual_instance ($courseid) {
         global $DB;
         $manualinstance = $DB->get_record('enrol', array('courseid' => $courseid, 'enrol' => 'manual'), '*', MUST_EXIST);
         return $manualinstance;
@@ -154,10 +155,11 @@ class local_eudest_testcase extends advanced_testcase {
         $this->assertEquals(0, $result->last_inactivity_date);
         $this->assertEquals(0, $result->last_califications_date);
     }
+
     /**
      * Tests if a course is intensive.
      */
-    public function test_eude_module_is_intensive() {
+    public function test_eude_module_is_intensive () {
         $this->resetAfterTest(true);
 
         // Creating a instance of the local_eudest class.
@@ -182,7 +184,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if a course allows to a master.
      */
-    public function test_eude_module_allows_to_master() {
+    public function test_eude_module_allows_to_master () {
         $this->resetAfterTest(true);
 
         // Creating a instance of the local_eudest class.
@@ -219,7 +221,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if a course is convalidable.
      */
-    public function test_eude_module_is_convalidable() {
+    public function test_eude_module_is_convalidable () {
         $this->resetAfterTest(true);
 
         // Creating a instance of the local_eudest class.
@@ -245,13 +247,12 @@ class local_eudest_testcase extends advanced_testcase {
         // Test3: use course 3 (should return 0).
         $result = $this->invoke_method($instance1, 'eude_module_is_convalidable', array($course3->shortname));
         $this->assertEquals(0, $result);
-
     }
 
     /**
      * Tests if an enrolment can be saved.
      */
-    public function test_eude_save_enrolment_instance() {
+    public function test_eude_save_enrolment_instance () {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -295,8 +296,7 @@ class local_eudest_testcase extends advanced_testcase {
         $pdteencap = 1;
         $pdteconv = 0;
 
-        $this->invoke_method($instance1, 'eude_save_enrolment_instance',
-                array($paramobject, $intensive, $pdteencap, $pdteconv));
+        $this->invoke_method($instance1, 'eude_save_enrolment_instance', array($paramobject, $intensive, $pdteencap, $pdteconv));
 
         $result = $DB->get_record('local_eudest_enrols', array('userid' => $user1->id, 'courseid' => $course1->id));
 
@@ -340,8 +340,7 @@ class local_eudest_testcase extends advanced_testcase {
         $pdteencap = 0;
         $pdteconv = 0;
 
-        $this->invoke_method($instance1, 'eude_save_enrolment_instance',
-                array($paramobject, $intensive, $pdteencap, $pdteconv));
+        $this->invoke_method($instance1, 'eude_save_enrolment_instance', array($paramobject, $intensive, $pdteencap, $pdteconv));
 
         $result2 = $DB->get_record('local_eudest_enrols', array('userid' => $user1->id, 'courseid' => $course2->id));
 
@@ -375,7 +374,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests the copy of moodle enrolments into own table.
      */
-    public function test_eude_register_enrolments() {
+    public function test_eude_register_enrolments () {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -503,13 +502,12 @@ class local_eudest_testcase extends advanced_testcase {
         $this->assertEquals($expected[$enrol2id->id]->pend_convalidation, $query[$enrol2id->id]->pend_convalidation);
         $this->assertEquals($expected[$enrol2id->id]->intensive, $query[$enrol2id->id]->intensive);
         $this->assertEquals($expected[$enrol2id->id]->masterid, $query[$enrol2id->id]->masterid);
-
     }
 
     /**
      * Tests save encapsulations of enrolments.
      */
-    public function test_eude_save_encapsulation() {
+    public function test_eude_save_encapsulation () {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -841,16 +839,16 @@ class local_eudest_testcase extends advanced_testcase {
         // Testing the function with the initial settings.
         $this->invoke_method($instance1, 'eude_add_event_to_calendar',
                 array('name' => $e1->name, 'description' => $e1->description, 'timestart' => $e1->timestart,
-                    'timeduration' => $e1->timeduration, 'userid' => $e1->userid));
+            'timeduration' => $e1->timeduration, 'userid' => $e1->userid));
         $this->invoke_method($instance1, 'eude_add_event_to_calendar',
                 array('name' => $e2->name, 'description' => $e2->description, 'timestart' => $e2->timestart,
-                    'timeduration' => $e2->timeduration, 'userid' => $e2->userid));
+            'timeduration' => $e2->timeduration, 'userid' => $e2->userid));
         $this->invoke_method($instance1, 'eude_add_event_to_calendar',
                 array('name' => $e3->name, 'description' => $e3->description, 'timestart' => $e3->timestart,
-                    'timeduration' => $e3->timeduration, 'userid' => $e3->userid));
+            'timeduration' => $e3->timeduration, 'userid' => $e3->userid));
         $this->invoke_method($instance1, 'eude_add_event_to_calendar',
                 array('name' => $e4->name, 'description' => $e4->description, 'timestart' => $e4->timestart,
-                    'timeduration' => $e4->timeduration, 'userid' => $e4->userid));
+            'timeduration' => $e4->timeduration, 'userid' => $e4->userid));
 
         // Checking asserts.
         $expectedeudestmastersentries = $DB->get_records('event');
@@ -1109,18 +1107,12 @@ class local_eudest_testcase extends advanced_testcase {
         $startdate = time();
 
         // Testing the function with the initial settings.
-        $this->invoke_method($instance1, 'eude_add_message_to_stack',
-                array($category1->id, 'to1', 'target1', 'type1', $startdate));
-        $this->invoke_method($instance1, 'eude_add_message_to_stack',
-                array($category2->id, 'to1', 'target1', 'type1', $startdate));
-        $this->invoke_method($instance1, 'eude_add_message_to_stack',
-                array($category3->id, 'to1', 'target1', 'type1', $startdate));
-        $this->invoke_method($instance1, 'eude_add_message_to_stack',
-                array($category1->id, 'to1', 'target1', 'type2', $startdate));
-        $this->invoke_method($instance1, 'eude_add_message_to_stack',
-                array($category1->id, 'to1', 'target2', 'type2', $startdate));
-        $this->invoke_method($instance1, 'eude_add_message_to_stack',
-                array($category1->id, 'to2', 'target1', 'type2', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category1->id, 'to1', 'target1', 'type1', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category2->id, 'to1', 'target1', 'type1', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category3->id, 'to1', 'target1', 'type1', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category1->id, 'to1', 'target1', 'type2', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category1->id, 'to1', 'target2', 'type2', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category1->id, 'to2', 'target1', 'type2', $startdate));
 
         // Checking asserts.
         $expectedresult = $DB->get_records('local_eudest_msgs');
@@ -1370,13 +1362,13 @@ class local_eudest_testcase extends advanced_testcase {
 
         // Creating grades.
         $grade1 = $this->getDataGenerator()->create_grade_item(array(
-                'itemtype' => 'course', 'courseid' => $course1mod1->id, 'category' => $category1->id));
+            'itemtype' => 'course', 'courseid' => $course1mod1->id, 'category' => $category1->id));
         $grade2 = $this->getDataGenerator()->create_grade_item(array(
-                'itemtype' => 'course', 'courseid' => $course2mod2->id, 'category' => $category1->id));
+            'itemtype' => 'course', 'courseid' => $course2mod2->id, 'category' => $category1->id));
         $grade3 = $this->getDataGenerator()->create_grade_item(array(
-                'itemtype' => 'course', 'courseid' => $course3mod1->id, 'category' => $category1->id));
+            'itemtype' => 'course', 'courseid' => $course3mod1->id, 'category' => $category1->id));
         $grade4 = $this->getDataGenerator()->create_grade_item(array(
-                'itemtype' => 'course', 'courseid' => $course4mod2->id, 'category' => $category1->id));
+            'itemtype' => 'course', 'courseid' => $course4mod2->id, 'category' => $category1->id));
 
         $grades1 = new stdClass();
         $grades1->itemid = $grade1->id;
@@ -1422,7 +1414,7 @@ class local_eudest_testcase extends advanced_testcase {
         $othergrades = $DB->get_records_sql($sqlgrade, array());
         $this->assertCount(4, $othergrades);
 
-         // Setting the initial CFG parameter to allow convalidations.
+        // Setting the initial CFG parameter to allow convalidations.
         $CFG->local_eudest_convalidations = 1;
 
         // Testing the function when convalidation is allowed.
@@ -1442,7 +1434,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests generate master messages from encapsulation.
      */
-    public function test_eude_generate_master_messages() {
+    public function test_eude_generate_master_messages () {
         global $DB;
         global $CFG;
 
@@ -1546,13 +1538,12 @@ class local_eudest_testcase extends advanced_testcase {
         $data5 = $DB->get_records('local_eudest_masters', array());
         $this->assertEquals($data5[$identif + 1]->pend_master_messages, '0');
         $this->assertEquals($data5[$identif + 2]->pend_master_messages, '0');
-
     }
 
     /**
      * Tests generate inactivity messages.
      */
-    public function test_eude_generate_inactivity_messages() {
+    public function test_eude_generate_inactivity_messages () {
         global $DB;
         global $CFG;
 
@@ -1676,7 +1667,7 @@ class local_eudest_testcase extends advanced_testcase {
         $eudeconfig = new stdClass();
         $eudeconfig->last_inactivity_date = $today;
 
-        $this->set_protected ($instance1, 'eudeconfig', $eudeconfig);
+        $this->set_protected($instance1, 'eudeconfig', $eudeconfig);
 
         $return = $this->invoke_method($instance1, 'eude_generate_inactivity_messages', array());
 
@@ -1684,7 +1675,7 @@ class local_eudest_testcase extends advanced_testcase {
         $eudeconfig2 = new stdClass();
         $eudeconfig2->last_inactivity_date = $today - $month;
 
-        $this->set_protected ($instance1, 'eudeconfig', $eudeconfig2);
+        $this->set_protected($instance1, 'eudeconfig', $eudeconfig2);
         $return = $this->invoke_method($instance1, 'eude_generate_inactivity_messages', array());
         $results = $DB->get_records('local_eudest_masters');
 
@@ -1707,13 +1698,12 @@ class local_eudest_testcase extends advanced_testcase {
         $this->assertEquals($results[$accessid4->id]->inactivity6, 0);
         $this->assertEquals($results[$accessid4->id]->inactivity18, 1);
         $this->assertEquals($results[$accessid4->id]->inactivity24, 1);
-
     }
 
     /**
      * Tests if can update course total grade.
      */
-    public function test_eude_update_course_grade() {
+    public function test_eude_update_course_grade () {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -1730,9 +1720,9 @@ class local_eudest_testcase extends advanced_testcase {
         $course1 = $this->getDataGenerator()->create_course(array('shortname' => 'Course 1', 'category' => $category1->id));
 
         $gradecat = $this->getDataGenerator()->create_grade_category(array(
-                                                            'courseid' => $course1->id,
-                                                            'fullname' => 'Grade Category',
-                                                            'aggregation' => '13'));
+            'courseid' => $course1->id,
+            'fullname' => 'Grade Category',
+            'aggregation' => '13'));
 
         $manualinstance = self::create_manual_instance($course1->id);
         $manualplugin->enrol_user($manualinstance, $user1->id, $studentrole->id, time() - 1000000, time() + 1000000);
@@ -1785,7 +1775,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if messages are sended.
      */
-    public function test_eude_send_scheduled_messages() {
+    public function test_eude_send_scheduled_messages () {
         global $DB;
         global $CFG;
 
@@ -1916,7 +1906,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if configuration can be saved.
      */
-    public function test_eude_save_configuration() {
+    public function test_eude_save_configuration () {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -1948,13 +1938,12 @@ class local_eudest_testcase extends advanced_testcase {
         $config2 = $DB->get_records('local_eudest_config', array());
         $this->assertEquals($config2[$identif]->last_enrolid, 12);
         $this->assertEquals($config2[$identif + 1]->last_enrolid, 14);
-
     }
 
     /**
      * Tests Get category.
      */
-    public function test_getcategory() {
+    public function test_getcategory () {
 
         $this->resetAfterTest(true);
 
@@ -1966,6 +1955,128 @@ class local_eudest_testcase extends advanced_testcase {
         $category = $this->invoke_method($instance1, 'get_category', array($category1->id));
         $this->assertNotEmpty($category);
         $this->assertequals($category->name, 'Category 1');
+    }
+
+    /**
+     * Tests Override califications.
+     */
+    public function test_eude_override_califications () {
+        global $CFG;
+        global $DB;
+
+        $this->resetAfterTest(true);
+
+        $instance1 = new local_eudest();
+
+        $CFG->local_eudest_override = 1;
+
+        $eudeconf = new stdClass();
+        $eudeconf->id = 0;
+        $eudeconf->last_enrolid = 1;
+        $eudeconf->last_inactivity_date = time();
+        $eudeconf->last_califications_date = time() - 150000;
+        $this->set_protected($instance1, 'eudeconfig', $eudeconf);
+        // Creating user.
+        $user1 = $this->getDataGenerator()->create_user(array('username' => 'usuario 1', 'email' => 'user1@php.com'));
+
+        // Creating category tests.
+        $category1 = $this->getDataGenerator()->create_category(array('name' => 'Category 1'));
+        $category2 = $this->getDataGenerator()->create_category(array('name' => 'Category Intensives'));
+
+        // Creating courses.
+        $course1 = $this->getDataGenerator()->create_course(array('shortname' => 'CA.M.FM', 'category' => $category1->id));
+        $course2 = $this->getDataGenerator()->create_course(array('shortname' => 'MI.FM', 'category' => $category2->id));
+        $course3 = $this->getDataGenerator()->create_course(array('shortname' => 'CA.M.JJ', 'category' => $category1->id));
+        $course4 = $this->getDataGenerator()->create_course(array('shortname' => 'MI.JJ', 'category' => $category2->id));
+
+        // Enrol user in course.
+        $studentrole = self::get_student_role();
+        $this->getDataGenerator()->enrol_user($user1->id, $course1->id, $studentrole->id, 'manual');
+
+        // Creating grade_categories for the courses.
+        $this->getDataGenerator()->create_grade_category(
+                array('courseid' => $course1->id, 'fullname' => 'Grade Category', 'aggregation' => '13'));
+        $this->getDataGenerator()->create_grade_category(
+                array('courseid' => $course2->id, 'fullname' => 'Grade Category Intensives', 'aggregation' => '13'));
+
+        // Creating quizs.
+        $quiz1 = $this->getDataGenerator()->create_module('quiz', array('course' => $course1->id));
+        $quiz2 = $this->getDataGenerator()->create_module('quiz', array('course' => $course2->id));
+        $quiz3 = $this->getDataGenerator()->create_module('quiz', array('course' => $course3->id));
+        $quiz4 = $this->getDataGenerator()->create_module('quiz', array('course' => $course4->id));
+
+        // Getting grade item id from each quiz.
+        $itemid1 = $DB->get_record('grade_items', array('itemtype' => 'course', 'courseid' => $course1->id));
+        $itemid2 = $DB->get_record('grade_items', array('itemtype' => 'course', 'courseid' => $course2->id));
+        $itemid3 = $DB->get_record('grade_items', array('itemtype' => 'course', 'courseid' => $course3->id));
+        $itemid4 = $DB->get_record('grade_items', array('itemtype' => 'course', 'courseid' => $course4->id));
+
+        // Creating grades for the quiz.
+        $studentgrade1 = new stdClass();
+        $studentgrade1->itemid = $itemid1->id;
+        $studentgrade1->userid = $user1->id;
+        $studentgrade1->finalgrade = 60.0000;
+        $studentgrade1->rawgrademax = 10.00000;
+        $studentgrade1->rawgrademin = 0.00000;
+        $studentgrade1->timecreated = time() - 400;
+        $studentgrade1->timemodified = time() - 400;
+        $DB->insert_record('grade_grades', $studentgrade1);
+
+        $inserttest = $DB->get_record('grade_grades', array('userid' => $user1->id, 'itemid' => $itemid1->id));
+        $this->assertEquals($inserttest->finalgrade, '60.00000');
+        
+        // Intensive course quiz.
+        $intnesivegrade2 = new stdClass();
+        $intnesivegrade2->itemid = $itemid2->id;
+        $intnesivegrade2->userid = $user1->id;
+        $intnesivegrade2->finalgrade = 90.0000;
+        $intnesivegrade2->rawgrademax = 10.00000;
+        $intnesivegrade2->rawgrademin = 0.00000;
+        $intnesivegrade2->timecreated = time() - 400;
+        $intnesivegrade2->timemodified = time() - 400;
+        $DB->insert_record('grade_grades', $intnesivegrade2);
+
+        $inserttest = $DB->get_record('grade_grades', array('userid' => $user1->id, 'itemid' => $itemid2->id));
+        $this->assertEquals($inserttest->finalgrade, '90.00000');
+
+        // Creating grades for the quiz.
+        $studentgrade3 = new stdClass();
+        $studentgrade3->itemid = $itemid3->id;
+        $studentgrade3->userid = $user1->id;
+        $studentgrade3->finalgrade = 80.0000;
+        $studentgrade3->rawgrademax = 10.00000;
+        $studentgrade3->rawgrademin = 0.00000;
+        $studentgrade3->timecreated = time() - 400;
+        $studentgrade3->timemodified = time() - 400;
+        $DB->insert_record('grade_grades', $studentgrade3);
+
+        $inserttest = $DB->get_record('grade_grades', array('userid' => $user1->id, 'itemid' => $itemid3->id));
+        $this->assertEquals($inserttest->finalgrade, '80.00000');
+
+        // Intensive course quiz.
+        $intnesivegrade4 = new stdClass();
+        $intnesivegrade4->itemid = $itemid4->id;
+        $intnesivegrade4->userid = $user1->id;
+        $intnesivegrade4->finalgrade = 70.0000;
+        $intnesivegrade4->rawgrademax = 10.00000;
+        $intnesivegrade4->rawgrademin = 0.00000;
+        $intnesivegrade4->timecreated = time() - 400;
+        $intnesivegrade4->timemodified = time() - 400;
+        $DB->insert_record('grade_grades', $intnesivegrade4);
+
+        $inserttest = $DB->get_record('grade_grades', array('userid' => $user1->id, 'itemid' => $itemid4->id));
+        $this->assertEquals($inserttest->finalgrade, '70.00000');
+        
+        $this->invoke_method($instance1, 'eude_override_califications');
+        
+        // Test1: Insert higher grade in intensive couse, so it should replace the normal course grade.
+        $result = $DB->get_record('grade_grades', array('itemid' => $studentgrade1->itemid));
+        $this->assertEquals('90.00000', $result->finalgrade);
+
+        // Test2: Insert lower grade in intensive, so it shouldn't replace the normal course grade.
+        $result2 = $DB->get_record('grade_grades', array('itemid' => $studentgrade3->itemid));
+        $this->assertEquals('80.00000', $result2->finalgrade);
 
     }
+
 }
