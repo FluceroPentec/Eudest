@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -693,9 +694,11 @@ class local_eudest {
                 $target = implode(",", $nodecategory->users);
                 $this->eude_add_message_to_stack($nodecategory->categoryid, $rm, $target, $this->msgtypenewstudent, $today);
             }
-            foreach ($intensivecourserecords as $record) {
-                $this->eude_add_message_to_stack($intensivecoursecategory->category, $rmintensive, $record->userid,
-                        $this->msgtypenewstudent, $today);
+            if ($rmintensive) {
+                foreach ($intensivecourserecords as $record) {
+                    $this->eude_add_message_to_stack($intensivecoursecategory->category, $rmintensive, $record->userid,
+                            $this->msgtypenewstudent, $today);
+                }
             }
         }
 
@@ -733,16 +736,18 @@ class local_eudest {
                 $this->eude_add_message_to_stack($nodecategory->categoryid, $rm, date($this->dateformat2, $nodecategory->startdate),
                         $this->msgtypermfinishmaster, $tend);
             }
-            foreach ($intensivecourserecords as $record) {
-                if ($rmintensive == 0) {
-                    continue;
-                }
-                $tend = strtotime('+1 day', $record->enddate);
-                $tend = strtotime(date($this->dateformat, $tend));
+            if ($rmintensive) {
+                foreach ($intensivecourserecords as $record) {
+                    if ($rmintensive == 0) {
+                        continue;
+                    }
+                    $tend = strtotime('+1 day', $record->enddate);
+                    $tend = strtotime(date($this->dateformat, $tend));
 
-                // Add message to stack.
-                $this->eude_add_message_to_stack($record->categoryid, $rmintensive, date($this->dateformat2, $record->startdate),
-                        $this->msgtypermfinishmaster, $tend);
+                    // Add message to stack.
+                    $this->eude_add_message_to_stack($record->categoryid, $rmintensive,
+                            date($this->dateformat2, $record->startdate), $this->msgtypermfinishmaster, $tend);
+                }
             }
         }
     }
@@ -879,8 +884,7 @@ class local_eudest {
                     }
                     // Notice user.
                     if ($noticeuseroninactivity24) {
-                        $this->eude_add_message_to_stack($record->categoryid, $record->userid, "",
-                                $this->msgtypeuserlocked, $today);
+                        $this->eude_add_message_to_stack($record->categoryid, $record->userid, "", $this->msgtypeuserlocked, $today);
                     }
                 }
             }
