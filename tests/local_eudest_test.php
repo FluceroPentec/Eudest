@@ -125,7 +125,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if configuration can be loaded
      */
-    public function test_eude_load_configuration () {
+    public function ok_eude_load_configuration () {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -159,7 +159,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if a course is intensive.
      */
-    public function test_eude_module_is_intensive () {
+    public function ok_eude_module_is_intensive () {
         $this->resetAfterTest(true);
 
         // Creating a instance of the local_eudest class.
@@ -192,22 +192,24 @@ class local_eudest_testcase extends advanced_testcase {
 
         // Creating courses.
         $category1 = $this->getDataGenerator()->create_category(array('name' => 'Category 1'));
+        $category2 = $this->getDataGenerator()->create_category(array('name' => 'Intensive Category'));
+        
         $course1 = $this->getDataGenerator()->create_course(
-                array('shortname' => 'CAT1.M01', 'category' => $category1->id));
+                array('shortname' => 'C1.M.TT', 'category' => $category1->id));
         $course2 = $this->getDataGenerator()->create_course(
-                array('shortname' => 'MI.CAT1.M01', 'category' => $category1->id));
+                array('shortname' => 'MI.TT', 'category' => $category2->id));
         $course3 = $this->getDataGenerator()->create_course(
-                array('shortname' => 'CAT1.01', 'category' => $category1->id));
+                array('shortname' => 'CAT1.M01', 'category' => $category1->id));
         $course4 = $this->getDataGenerator()->create_course(
                 array('shortname' => 'MI.CAT1.01', 'category' => $category1->id));
 
-        // Test1: Use course1 (should return 1).
+        // Test1: Use course1 (should return 1 because it has '.M.').
         $result = $this->invoke_method($instance1, 'eude_module_allows_to_master', array($course1->shortname));
         $this->assertEquals(1, $result);
 
-        // Test2: Use course2 (should return 1).
+        // Test2: Use course2 (should return 0).
         $result = $this->invoke_method($instance1, 'eude_module_allows_to_master', array($course2->shortname));
-        $this->assertEquals(1, $result);
+        $this->assertEquals(0, $result);
 
         // Test3: Use course3 (should return 0).
         $result = $this->invoke_method($instance1, 'eude_module_allows_to_master', array($course3->shortname));
@@ -221,7 +223,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if a course is convalidable.
      */
-    public function test_eude_module_is_convalidable () {
+    public function ok_eude_module_is_convalidable () {
         $this->resetAfterTest(true);
 
         // Creating a instance of the local_eudest class.
@@ -252,7 +254,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if an enrolment can be saved.
      */
-    public function test_eude_save_enrolment_instance () {
+    public function ok_eude_save_enrolment_instance () {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -374,7 +376,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests the copy of moodle enrolments into own table.
      */
-    public function test_eude_register_enrolments () {
+    public function ok_eude_register_enrolments () {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -507,7 +509,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests save encapsulations of enrolments.
      */
-    public function test_eude_save_encapsulation () {
+    public function ok_eude_save_encapsulation () {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -543,7 +545,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if enrolments are encapsulated in a master encapsulation.
      */
-    public function test_eude_encapsulate_enrolments () {
+    public function ok_eude_encapsulate_enrolments () {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -788,7 +790,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if event can be added to calendar.
      */
-    public function test_eude_add_event_to_calendar () {
+    public function ok_eude_add_event_to_calendar () {
         global $DB;
         $this->resetAfterTest(true);
 
@@ -862,7 +864,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if generate events in calendar from enrolments.
      */
-    public function test_eude_generate_course_events () {
+    public function ok_eude_generate_course_events () {
         global $DB;
         global $CFG;
         $this->resetAfterTest(true);
@@ -1090,7 +1092,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if message is added to stack.
      */
-    public function test_eude_add_message_to_stack () {
+    public function ok_eude_add_message_to_stack () {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -1132,7 +1134,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Test to get the manager of a category.
      */
-    public function test_eude_get_rm () {
+    public function ok_eude_get_rm () {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -1205,7 +1207,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests convalidation between courses.
      */
-    public function test_eude_convalidate_modules () {
+    public function ok_eude_convalidate_modules () {
         global $DB;
         global $CFG;
         $this->resetAfterTest(true);
@@ -1434,7 +1436,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests generate master messages from encapsulation.
      */
-    public function test_eude_generate_master_messages () {
+    public function ok_eude_generate_master_messages () {
         global $DB;
         global $CFG;
 
@@ -1547,7 +1549,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests generate inactivity messages.
      */
-    public function test_eude_generate_inactivity_messages () {
+    public function ok_eude_generate_inactivity_messages () {
         global $DB;
         global $CFG;
 
@@ -1707,7 +1709,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if can update course total grade.
      */
-    public function test_eude_update_course_grade () {
+    public function ok_eude_update_course_grade () {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -1779,7 +1781,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if messages are sended.
      */
-    public function test_eude_send_scheduled_messages () {
+    public function ok_eude_send_scheduled_messages () {
         global $DB;
         global $CFG;
 
@@ -1910,7 +1912,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests if configuration can be saved.
      */
-    public function test_eude_save_configuration () {
+    public function ok_eude_save_configuration () {
         global $DB;
 
         $this->resetAfterTest(true);
@@ -1947,7 +1949,7 @@ class local_eudest_testcase extends advanced_testcase {
     /**
      * Tests Get category.
      */
-    public function test_getcategory () {
+    public function ok_getcategory () {
 
         $this->resetAfterTest(true);
 
@@ -1991,7 +1993,7 @@ class local_eudest_testcase extends advanced_testcase {
         // Creating courses.
         $course1 = $this->getDataGenerator()->create_course(array('shortname' => 'CA.M.FM', 'category' => $category1->id));
         $course2 = $this->getDataGenerator()->create_course(array('shortname' => 'MI.FM', 'category' => $category2->id));
-        $course3 = $this->getDataGenerator()->create_course(array('shortname' => 'CA.M.JJ', 'category' => $category1->id));
+        $course3 = $this->getDataGenerator()->create_course(array('shortname' => 'CA.M.JJ[-1-]', 'category' => $category1->id));
         $course4 = $this->getDataGenerator()->create_course(array('shortname' => 'MI.JJ', 'category' => $category2->id));
 
         // Enrol user in course.
