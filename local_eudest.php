@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -884,7 +883,8 @@ class local_eudest {
                     }
                     // Notice user.
                     if ($noticeuseroninactivity24) {
-                        $this->eude_add_message_to_stack($record->categoryid, $record->userid, "", $this->msgtypeuserlocked, $today);
+                        $this->eude_add_message_to_stack($record->categoryid, $record->userid, "",
+                                $this->msgtypeuserlocked, $today);
                     }
                 }
             }
