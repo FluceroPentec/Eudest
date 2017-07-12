@@ -673,12 +673,12 @@ class local_eudest {
                  WHERE lee.intensive = 1
                    AND lee.id > :lastenrolid';
         $intensivecourserecords = $DB->get_records_sql($sql, array('lastenrolid' => $this->eudeconfig->last_enrolid));
-
+        $intensivetag = $this->intensivetag;
         // We recover the intensive module category.
         $sql = "SELECT DISTINCT c.category
                   FROM {course} c
-                 WHERE c.shortname LIKE CONCAT(:intensivetag, '.%')";
-        $intensivecoursecategory = $DB->get_record_sql($sql, array('intensivetag' => $this->intensivetag));
+                 WHERE c.shortname LIKE CONCAT('$intensivetag', '.%')";
+        $intensivecoursecategory = $DB->get_record_sql($sql, array());
 
         // We get the responsable master for the intensive courses categories.
         $rmintensive = $this->eude_get_rm($intensivecoursecategory->category);
