@@ -917,7 +917,7 @@ class local_eudest {
 
         // Get last check date.
         $lastcheck = $this->eudeconfig->last_califications_date;
-
+        $intensivetag = $this->intensivetag;
         // Get new grades.
         $sql = "SELECT GG.id, GG.finalgrade, GG.timemodified, GG.userid, GG.information, GC.shortname, GC.fullname
                  FROM {grade_grades} GG
@@ -926,9 +926,9 @@ class local_eudest {
                 WHERE GI.itemtype = 'course'
                   AND GG.finalgrade is not null
                   AND GG.timemodified > :lastcheck
-                  AND upper(GC.shortname) LIKE CONCAT(':intensivetag', '.%')
+                  AND upper(GC.shortname) LIKE CONCAT($intensivetag, '.%')
              ORDER BY GG.timemodified asc";
-        $records = $DB->get_records_sql($sql, array("lastcheck" => $lastcheck, 'intensivetag' => $this->intensivetag));
+        $records = $DB->get_records_sql($sql, array("lastcheck" => $lastcheck));
 
         foreach ($records as $record) {
             // Get new grade value.
@@ -944,8 +944,8 @@ class local_eudest {
                  JOIN {course} gc ON gi.courseid = gc.id
                      WHERE gi.itemtype = 'course'
                        AND gg.userid = :userid
-                       AND shortname LIKE CONCAT('%.M', CONCAT(':shortname', '%'))";
-            $module = $DB->get_record_sql($sql2, array("userid" => $userid, "shortname" => $shortname));
+                       AND shortname LIKE CONCAT('%.M', CONCAT($shortname, '%'))";
+            $module = $DB->get_record_sql($sql2, array("userid" => $userid));
             $actualcalification = 0;
             $information = "";
             if ($module) {
