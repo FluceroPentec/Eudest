@@ -399,6 +399,8 @@ class local_eudest_testcase extends advanced_testcase {
                 array('shortname' => 'CAT1.M.M03', 'category' => $category1->id));
         $course4 = $this->getDataGenerator()->create_course(
                 array('shortname' => 'CAT1.M.M04', 'category' => $category1->id));
+        $course5 = $this->getDataGenerator()->create_course(
+                array('shortname' => 'Old format course', 'category' => $category1->id));
 
         // Getting the id of the roles.
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
@@ -412,6 +414,7 @@ class local_eudest_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course2->id, $studentrole->id, 'manual', $intensivestart, $intensiveend);
         $this->getDataGenerator()->enrol_user($user1->id, $course3->id, $studentrole->id, 'manual', $normalstart, $normalend);
         $this->getDataGenerator()->enrol_user($user1->id, $course4->id, $studentrole->id, 'manual', $normalstart, $normalend);
+        $this->getDataGenerator()->enrol_user($user1->id, $course5->id, $studentrole->id, 'manual', $normalstart, $normalend);
 
         // Get last enrolment id.
         $sql = 'SELECT id
@@ -435,10 +438,12 @@ class local_eudest_testcase extends advanced_testcase {
         $query = $DB->get_records('local_eudest_enrols', array('userid' => $user1->id));
         $this->assertCount(0, $query);
 
-        // Test2: Set lastid attribute = last enrolment -2 and check there are two enrolments processed.
+        // Test2: Set lastid attribute = last enrolment -3 and check there are two enrolments processed because.
+        // the last one doesn't have the proper format for encapsulation.
+
         $eudeconfig = new stdClass();
         $eudeconfig->id = 0;
-        $eudeconfig->last_enrolid = ($lastid->id) - 2;
+        $eudeconfig->last_enrolid = ($lastid->id) - 3;
         $eudeconfig->last_inactivity_date = 0;
         $eudeconfig->last_califications_date = 0;
 
@@ -1232,13 +1237,17 @@ class local_eudest_testcase extends advanced_testcase {
 
         // Creating courses related to the categorie above.
         $course1mod1 = $this->getDataGenerator()->create_course(
-                array('shortname' => 'Course 1[-Modulo 1-]', 'category' => $category1->id));
+                array('shortname' => 'CT1.M.CS1[-1-]', 'category' => $category1->id));
         $course2mod2 = $this->getDataGenerator()->create_course(
-                array('shortname' => 'Course 2[-Modulo 2-]', 'category' => $category1->id));
+                array('shortname' => 'CT1.M.CS2[-2-]', 'category' => $category1->id));
         $course3mod1 = $this->getDataGenerator()->create_course(
-                array('shortname' => 'Course 3[-Modulo 1-]', 'category' => $category1->id));
+                array('shortname' => 'CT1.M.CS3[-1-]', 'category' => $category1->id));
         $course4mod2 = $this->getDataGenerator()->create_course(
-                array('shortname' => 'Course 4[-Modulo 2-]', 'category' => $category1->id));
+                array('shortname' => 'CT1.M.CS4[-2-]', 'category' => $category1->id));
+        $course5mod3 = $this->getDataGenerator()->create_course(
+                array('shortname' => 'CT1.M.CS5[-3-]', 'category' => $category1->id));
+        $course6mod3 = $this->getDataGenerator()->create_course(
+                array('shortname' => 'CT1.M.CS6[-3-]', 'category' => $category1->id));
 
         // Getting the id of the roles.
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
@@ -1253,10 +1262,12 @@ class local_eudest_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course3mod1->id, $studentrole->id, 'manual');
         $this->getDataGenerator()->enrol_user($user1->id, $course4mod2->id, $studentrole->id, 'manual');
 
-        // Enrol user2 in courses 1, 2 and 3 as student, not enrol in course 4.
+        // Enrol user2 in courses 1, 2, 4, 5 and 6 as student, not enrol in course 4.
         $this->getDataGenerator()->enrol_user($user2->id, $course1mod1->id, $studentrole->id, 'manual');
         $this->getDataGenerator()->enrol_user($user2->id, $course2mod2->id, $studentrole->id, 'manual');
         $this->getDataGenerator()->enrol_user($user2->id, $course3mod1->id, $studentrole->id, 'manual');
+        $this->getDataGenerator()->enrol_user($user2->id, $course5mod3->id, $studentrole->id, 'manual');
+        $this->getDataGenerator()->enrol_user($user2->id, $course6mod3->id, $studentrole->id, 'manual');
 
         // Recording initial data in eudest_enrols.
         $record1 = new stdClass();
@@ -1352,6 +1363,32 @@ class local_eudest_testcase extends advanced_testcase {
         $record7->intensive = 0;
         $record7->masterid = 0;
         $DB->insert_record('local_eudest_enrols', $record7);
+        $record8 = new stdClass();
+        $record8->userid = $user2->id;
+        $record8->courseid = $course5mod3->id;
+        $record8->shortname = $course5mod3->shortname;
+        $record8->categoryid = $category1->id;
+        $record8->startdate = $startdate;
+        $record8->enddate = $enddate;
+        $record8->pend_event = 1;
+        $record8->pend_encapsulation = 1;
+        $record8->pend_convalidation = 0;
+        $record8->intensive = 0;
+        $record8->masterid = 0;
+        $DB->insert_record('local_eudest_enrols', $record8);
+        $record9 = new stdClass();
+        $record9->userid = $user2->id;
+        $record9->courseid = $course6mod3->id;
+        $record9->shortname = $course6mod3->shortname;
+        $record9->categoryid = $category1->id;
+        $record9->startdate = $startdate;
+        $record9->enddate = $enddate;
+        $record9->pend_event = 1;
+        $record9->pend_encapsulation = 1;
+        $record9->pend_convalidation = 1;
+        $record9->intensive = 0;
+        $record9->masterid = 0;
+        $DB->insert_record('local_eudest_enrols', $record9);
 
         // Creating grade_categories for the courses.
         $this->getDataGenerator()->create_grade_category(
@@ -1362,16 +1399,35 @@ class local_eudest_testcase extends advanced_testcase {
                 array('courseid' => $course3mod1->id, 'fullname' => 'Grade Category', 'aggregation' => '13'));
         $this->getDataGenerator()->create_grade_category(
                 array('courseid' => $course4mod2->id, 'fullname' => 'Grade Category', 'aggregation' => '13'));
+        $this->getDataGenerator()->create_grade_category(
+                array('courseid' => $course5mod3->id, 'fullname' => 'Grade Category', 'aggregation' => '13'));
+        $this->getDataGenerator()->create_grade_category(
+                array('courseid' => $course6mod3->id, 'fullname' => 'Grade Category', 'aggregation' => '13'));
 
         // Creating grades.
-        $grade1 = $this->getDataGenerator()->create_grade_item(array(
+        $this->getDataGenerator()->create_grade_item(array(
             'itemtype' => 'course', 'courseid' => $course1mod1->id, 'category' => $category1->id));
-        $grade2 = $this->getDataGenerator()->create_grade_item(array(
+        $this->getDataGenerator()->create_grade_item(array(
             'itemtype' => 'course', 'courseid' => $course2mod2->id, 'category' => $category1->id));
-        $grade3 = $this->getDataGenerator()->create_grade_item(array(
+        $this->getDataGenerator()->create_grade_item(array(
             'itemtype' => 'course', 'courseid' => $course3mod1->id, 'category' => $category1->id));
-        $grade4 = $this->getDataGenerator()->create_grade_item(array(
+        $this->getDataGenerator()->create_grade_item(array(
             'itemtype' => 'course', 'courseid' => $course4mod2->id, 'category' => $category1->id));
+        $this->getDataGenerator()->create_grade_item(array(
+            'itemtype' => 'course', 'courseid' => $course5mod3->id, 'category' => $category1->id));
+        $this->getDataGenerator()->create_grade_item(array(
+            'itemtype' => 'course', 'courseid' => $course6mod3->id, 'category' => $category1->id));
+
+        $sqlitems = "SELECT *
+                            FROM {grade_items}
+                           WHERE itemtype = :type
+                             AND courseid = :courseid
+                             AND iteminstance IS NOT NULL";
+        $grade1 = $DB->get_record_sql($sqlitems, array('type' => 'course', 'courseid' => $course1mod1->id));
+        $grade2 = $DB->get_record_sql($sqlitems, array('type' => 'course', 'courseid' => $course2mod2->id));
+        $grade3 = $DB->get_record_sql($sqlitems, array('type' => 'course', 'courseid' => $course3mod1->id));
+        $grade4 = $DB->get_record_sql($sqlitems, array('type' => 'course', 'courseid' => $course4mod2->id));
+        $grade5 = $DB->get_record_sql($sqlitems, array('type' => 'course', 'courseid' => $course5mod3->id));
 
         $grades1 = new stdClass();
         $grades1->itemid = $grade1->id;
@@ -1397,13 +1453,19 @@ class local_eudest_testcase extends advanced_testcase {
         $grades6->userid = $user2->id;
         $DB->insert_record('grade_grades', $grades6, false);
 
+        $grades7 = new stdClass();
+        $grades7->itemid = $grade5->id;
+        $grades7->finalgrade = 29;
+        $grades7->userid = $user2->id;
+        $DB->insert_record('grade_grades', $grades7, false);
+
         $sqlgrade = "SELECT gg.id, gg.itemid, gi.courseid, c.shortname, gg.userid, gi.grademax, gg.finalgrade
                        FROM {grade_items} gi
                        JOIN {grade_grades} gg on gg.itemid = gi.id
                        JOIN {course} c on gi.courseid = c.id
                       WHERE gi.itemtype = 'course'";
         $grades = $DB->get_records_sql($sqlgrade, array());
-        $this->assertCount(4, $grades);
+        $this->assertCount(5, $grades);
 
         // Test data of 'local_eudest_enrols' table.
         $enrols = $DB->get_records('local_eudest_enrols', array());
@@ -1415,7 +1477,7 @@ class local_eudest_testcase extends advanced_testcase {
         $this->invoke_method($instance1, 'eude_convalidate_modules', array());
 
         $othergrades = $DB->get_records_sql($sqlgrade, array());
-        $this->assertCount(4, $othergrades);
+        $this->assertCount(5, $othergrades);
 
         // Setting the initial CFG parameter to allow convalidations.
         $CFG->local_eudest_convalidations = 1;
@@ -1431,7 +1493,16 @@ class local_eudest_testcase extends advanced_testcase {
         $this->assertEquals(0, $expected[$identif + 4]->pend_convalidation);
 
         $newgrades = $DB->get_records_sql($sqlgrade, array());
-        $this->assertCount(7, $newgrades);
+        $this->assertCount(8, $newgrades);
+
+        // Testing the function with a module not passed.
+        $this->invoke_method($instance1, 'eude_convalidate_modules', array());
+
+        $newexpected = $DB->get_records('local_eudest_enrols');
+        $this->assertEquals(0, $newexpected[$identif + 8]->pend_convalidation);
+
+        $lastgrades = $DB->get_records_sql($sqlgrade, array());
+        $this->assertCount(8, $lastgrades);
     }
 
     /**
@@ -1471,7 +1542,7 @@ class local_eudest_testcase extends advanced_testcase {
         $category2 = $this->getDataGenerator()->create_category(array('name' => 'Category 2'));
 
         $course1 = $this->getDataGenerator()->create_course(array('shortname' => 'Course 1', 'category' => $category1->id));
-        $course2 = $this->getDataGenerator()->create_course(array('shortname' => 'MI.Course 1', 'category' => $category2->id));
+        $this->getDataGenerator()->create_course(array('shortname' => 'MI.Course 1', 'category' => $category2->id));
 
         $manualinstance = self::create_manual_instance($course1->id);
         $manualplugin->enrol_user($manualinstance, $user1->id, $studentrole->id, $today - (10 * $month), $today - (5 * $month));
@@ -1905,8 +1976,6 @@ class local_eudest_testcase extends advanced_testcase {
 
         $this->invoke_method($instance1, 'eude_send_scheduled_messages', array());
 
-        $test = $DB->get_records('local_eudest_msgs', array());
-
         // Test Sended messages after use the function.
         $messages5 = $DB->get_records('local_eudest_msgs', array());
         $this->assertCount(0, $messages5);
@@ -1986,6 +2055,10 @@ class local_eudest_testcase extends advanced_testcase {
         $eudeconf->last_inactivity_date = time();
         $eudeconf->last_califications_date = time() - 150000;
         $this->set_protected($instance1, 'eudeconfig', $eudeconf);
+
+        // Creating a new type of role.
+        $this->getDataGenerator()->create_role(array('shortname' => 'studentval'));
+
         // Creating user.
         $user1 = $this->getDataGenerator()->create_user(array('username' => 'usuario 1', 'email' => 'user1@php.com'));
 
@@ -2003,17 +2076,11 @@ class local_eudest_testcase extends advanced_testcase {
         $studentrole = self::get_student_role();
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id, $studentrole->id, 'manual');
 
-        // Creating grade_categories for the courses.
-        $this->getDataGenerator()->create_grade_category(
-                array('courseid' => $course1->id, 'fullname' => 'Grade Category', 'aggregation' => '13'));
-        $this->getDataGenerator()->create_grade_category(
-                array('courseid' => $course2->id, 'fullname' => 'Grade Category Intensives', 'aggregation' => '13'));
-
         // Creating quizs.
-        $quiz1 = $this->getDataGenerator()->create_module('quiz', array('course' => $course1->id));
-        $quiz2 = $this->getDataGenerator()->create_module('quiz', array('course' => $course2->id));
-        $quiz3 = $this->getDataGenerator()->create_module('quiz', array('course' => $course3->id));
-        $quiz4 = $this->getDataGenerator()->create_module('quiz', array('course' => $course4->id));
+        $this->getDataGenerator()->create_module('quiz', array('course' => $course1->id));
+        $this->getDataGenerator()->create_module('quiz', array('course' => $course2->id));
+        $this->getDataGenerator()->create_module('quiz', array('course' => $course3->id));
+        $this->getDataGenerator()->create_module('quiz', array('course' => $course4->id));
 
         // Getting grade item id from each quiz.
         $itemid1 = $DB->get_record('grade_items', array('itemtype' => 'course', 'courseid' => $course1->id));
