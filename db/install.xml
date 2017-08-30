@@ -34,17 +34,17 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
             </KEYS>
             <INDEXES>
-                <INDEX NAME="idx_encp_cat" UNIQUE="false" FIELDS="pend_encapsulation, categoryid"/>
-                <INDEX NAME="idx_pend_cat_usr_date" UNIQUE="false" FIELDS="pend_event, categoryid, userid, startdate"/>
-                <INDEX NAME="idx_int_pendmess" UNIQUE="false" FIELDS="intensive, pend_int_messages"/>
+                <INDEX NAME="idx_encp_cat" UNIQUE="true" FIELDS="pend_encapsulation, categoryid"/>
+                <INDEX NAME="idx_pend" UNIQUE="true" FIELDS="pend_event"/>
+                <INDEX NAME="idx_pend_cat_usr_date" UNIQUE="true" FIELDS="pend_event, categoryid, userid, startdate"/>
+                <INDEX NAME="idx_int_pendmess" UNIQUE="true" FIELDS="intensive, pend_int_messages"/>
                 <INDEX NAME="idx_courseshortname_user" UNIQUE="true" FIELDS="shortname, userid"/>
-                <INDEX NAME="idx_pend_cat_usr" UNIQUE="false" FIELDS="pend_event, categoryid, userid"/>
-                <INDEX NAME="idx_user_course" UNIQUE="true" FIELDS="userid, courseid"/>
-                <INDEX NAME="idx_userid" UNIQUE="false" FIELDS="userid"/>
-                <INDEX NAME="idx_courseid" UNIQUE="false" FIELDS="courseid"/>
-                <INDEX NAME="idx_pend_enc_userid" UNIQUE="false" FIELDS="pend_encapsulation, userid"/>
-                <INDEX NAME="idx_pend_enc_userid_master" UNIQUE="false" FIELDS="pend_encapsulation, userid, masterid"/>
-                <INDEX NAME="idx_pend_event" UNIQUE="false" FIELDS="pend_event"/>
+                <INDEX NAME="idx_courseshortname_course_user" UNIQUE="true" FIELDS="shortname, courseid, userid"/>
+                <INDEX NAME="idx_userid" UNIQUE="true" FIELDS="userid"/>
+                <INDEX NAME="idx_courseid" UNIQUE="true" FIELDS="courseid"/>
+                <INDEX NAME="idx_pend_enc_userid" UNIQUE="true" FIELDS="pend_encapsulation, userid"/>
+                <INDEX NAME="idx_pend_enc_userid_master" UNIQUE="true" FIELDS="pend_encapsulation, userid, masterid"/>
+                <INDEX NAME="idx_pend_event" UNIQUE="true" FIELDS="pend_event"/>
             </INDEXES>
         </TABLE>
         <TABLE NAME="local_eudest_masters" COMMENT="encapsulations of the user enrolments in a master record">
@@ -64,11 +64,11 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
             </KEYS>
             <INDEXES>
-                <INDEX NAME="idx_pend_master_messages" UNIQUE="false" FIELDS="pend_master_messages"/>
-                <INDEX NAME="idx_user_dates_inactivity6" UNIQUE="false" FIELDS="userid, startdate, enddate, inactivity6"/>
-                <INDEX NAME="idx_user_inactivity18" UNIQUE="false" FIELDS="userid, inactivity18"/>
+                <INDEX NAME="idx_pend_master_messages" UNIQUE="true" FIELDS="pend_master_messages"/>
+                <INDEX NAME="idx_user_dates_inactivity6" UNIQUE="true" FIELDS="userid, startdate, enddate, inactivity6"/>
+                <INDEX NAME="idx_user_inactivity18" UNIQUE="true" FIELDS="userid, inactivity18"/>
                 <INDEX NAME="idx_user_cat_dates" UNIQUE="true" FIELDS="userid, categoryid, startdate, enddate"/>
-                <INDEX NAME="idx_user" UNIQUE="false" FIELDS="userid"/>
+                <INDEX NAME="idx_user" UNIQUE="true" FIELDS="userid"/>
                 <INDEX NAME="idx_user_category" UNIQUE="true" FIELDS="userid, categoryid"/>
             </INDEXES>
         </TABLE>
@@ -87,10 +87,10 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
             </KEYS>
             <INDEXES>
-                <INDEX NAME="idx_cat_msgto_target_type_date" UNIQUE="false" FIELDS="categoryid, msgto, msgtarget, msgtype, msgdate"/>
-                <INDEX NAME="idx_sended_date" UNIQUE="false" FIELDS="sended, msgdate"/>
-                <INDEX NAME="idx_cat" UNIQUE="false" FIELDS="categoryid"/>
-                <INDEX NAME="idx_msgtype" UNIQUE="false" FIELDS="msgtype"/>
+                <INDEX NAME="idx_cat_msgto_target_type_date" UNIQUE="true" FIELDS="categoryid, msgto, msgtarget, msgtype, msgdate"/>
+                <INDEX NAME="idx_sended_date" UNIQUE="true" FIELDS="sended, msgdate"/>
+                <INDEX NAME="idx_cat" UNIQUE="true" FIELDS="categoryid"/>
+                <INDEX NAME="idx_msgtype" UNIQUE="true" FIELDS="msgtype"/>
             </INDEXES>
         </TABLE>
     </TABLES>    
