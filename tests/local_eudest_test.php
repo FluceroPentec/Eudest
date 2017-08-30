@@ -359,6 +359,7 @@ class local_eudest_testcase extends advanced_testcase {
         $expected2->pend_convalidation = $pdteconv;
         $expected2->intensive = $intensive;
         $expected2->masterid = 0;
+        $expected2->pend_int_messages = 0;
 
         $this->assertEquals($expected2->userid, $result2->userid);
         $this->assertEquals($expected2->courseid, $result2->courseid);
@@ -417,10 +418,10 @@ class local_eudest_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course5->id, $studentrole->id, 'manual', $normalstart, $normalend);
 
         // Get last enrolment id.
-        $sql = 'SELECT id
+        $sql = "SELECT id
                   FROM {user_enrolments}
               ORDER BY id DESC
-                 LIMIT 1';
+                 LIMIT 1";
 
         $lastid = $DB->get_record_sql($sql, array());
 
@@ -469,6 +470,7 @@ class local_eudest_testcase extends advanced_testcase {
         $enrol1->pend_convalidation = $pdteconv;
         $enrol1->intensive = $intensive;
         $enrol1->masterid = 0;
+        $enrol1->pend_int_messages = 0;
 
         $enrol2 = new stdClass();
         $enrol2->userid = $user1->id;
@@ -482,6 +484,7 @@ class local_eudest_testcase extends advanced_testcase {
         $enrol2->pend_convalidation = $pdteconv;
         $enrol2->intensive = $intensive;
         $enrol2->masterid = 0;
+        $enrol2->pend_int_messages = 0;
 
         $enrol1id = $DB->get_record('local_eudest_enrols', array('courseid' => $course3->id));
         $enrol2id = $DB->get_record('local_eudest_enrols', array('courseid' => $course4->id));
@@ -620,6 +623,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record1->pend_convalidation = 0;
         $record1->intensive = 0;
         $record1->masterid = 0;
+        $record1->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record1);
         $record2 = new stdClass();
         $record2->userid = $student1->id;
@@ -633,6 +637,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record2->pend_convalidation = 0;
         $record2->intensive = 0;
         $record2->masterid = 0;
+        $record2->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record2);
         $record3 = new stdClass();
         $record3->userid = $student1->id;
@@ -646,6 +651,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record3->pend_convalidation = 0;
         $record3->intensive = 0;
         $record3->masterid = 0;
+        $record3->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record3);
         $record4 = new stdClass();
         $record4->userid = $student1->id;
@@ -659,6 +665,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record4->pend_convalidation = 0;
         $record4->intensive = 0;
         $record4->masterid = 0;
+        $record4->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record4);
         $record5 = new stdClass();
         $record5->userid = $student1->id;
@@ -672,6 +679,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record5->pend_convalidation = 0;
         $record5->intensive = 0;
         $record5->masterid = 0;
+        $record5->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record5);
         $record6 = new stdClass();
         $record6->userid = $student1->id;
@@ -685,6 +693,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record6->pend_convalidation = 0;
         $record6->intensive = 0;
         $record6->masterid = 0;
+        $record6->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record6);
         $record7 = new stdClass();
         $record7->userid = $student1->id;
@@ -698,6 +707,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record7->pend_convalidation = 0;
         $record7->intensive = 1;
         $record7->masterid = 0;
+        $record7->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record7);
         $record8 = new stdClass();
         $record8->userid = $student1->id;
@@ -711,6 +721,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record8->pend_convalidation = 0;
         $record8->intensive = 1;
         $record8->masterid = 0;
+        $record8->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record8);
         $record9 = new stdClass();
         $record9->userid = $student2->id;
@@ -724,6 +735,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record9->pend_convalidation = 0;
         $record9->intensive = 0;
         $record9->masterid = 0;
+        $record9->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record9);
         $record10 = new stdClass();
         $record10->userid = $student2->id;
@@ -737,6 +749,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record10->pend_convalidation = 0;
         $record10->intensive = 0;
         $record10->masterid = 0;
+        $record10->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record10);
         $record11 = new stdClass();
         $record11->userid = $student2->id;
@@ -750,6 +763,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record11->pend_convalidation = 0;
         $record11->intensive = 1;
         $record11->masterid = 0;
+        $record11->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record11);
 
         // Testing the function.
@@ -940,6 +954,7 @@ class local_eudest_testcase extends advanced_testcase {
         $recordenrol1->pend_convalidation = 0;
         $recordenrol1->intensive = 0;
         $recordenrol1->masterid = 0;
+        $recordenrol1->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $recordenrol1);
         $recordenrol2 = new stdClass();
         $recordenrol2->userid = $user1->id;
@@ -953,6 +968,7 @@ class local_eudest_testcase extends advanced_testcase {
         $recordenrol2->pend_convalidation = 0;
         $recordenrol2->intensive = 0;
         $recordenrol2->masterid = 0;
+        $recordenrol2->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $recordenrol2);
         $recordenrol3 = new stdClass();
         $recordenrol3->userid = $user1->id;
@@ -966,6 +982,7 @@ class local_eudest_testcase extends advanced_testcase {
         $recordenrol3->pend_convalidation = 0;
         $recordenrol3->intensive = 0;
         $recordenrol3->masterid = 0;
+        $recordenrol3->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $recordenrol3);
         $recordenrol4 = new stdClass();
         $recordenrol4->userid = $user1->id;
@@ -979,6 +996,7 @@ class local_eudest_testcase extends advanced_testcase {
         $recordenrol4->pend_convalidation = 0;
         $recordenrol4->intensive = 0;
         $recordenrol4->masterid = 0;
+        $recordenrol4->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $recordenrol4);
         $recordenrol5 = new stdClass();
         $recordenrol5->userid = $user1->id;
@@ -992,6 +1010,7 @@ class local_eudest_testcase extends advanced_testcase {
         $recordenrol5->pend_convalidation = 0;
         $recordenrol5->intensive = 0;
         $recordenrol5->masterid = 0;
+        $recordenrol5->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $recordenrol5);
         $recordenrol6 = new stdClass();
         $recordenrol6->userid = $user1->id;
@@ -1005,6 +1024,7 @@ class local_eudest_testcase extends advanced_testcase {
         $recordenrol6->pend_convalidation = 0;
         $recordenrol6->intensive = 0;
         $recordenrol6->masterid = 0;
+        $recordenrol6->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $recordenrol6);
         $recordenrol7 = new stdClass();
         $recordenrol7->userid = $user1->id;
@@ -1018,6 +1038,7 @@ class local_eudest_testcase extends advanced_testcase {
         $recordenrol7->pend_convalidation = 0;
         $recordenrol7->intensive = 1;
         $recordenrol7->masterid = 0;
+        $recordenrol7->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $recordenrol7);
         $recordenrol8 = new stdClass();
         $recordenrol8->userid = $user1->id;
@@ -1031,6 +1052,7 @@ class local_eudest_testcase extends advanced_testcase {
         $recordenrol8->pend_convalidation = 0;
         $recordenrol8->intensive = 1;
         $recordenrol8->masterid = 0;
+        $recordenrol8->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $recordenrol8);
         $recordenrol9 = new stdClass();
         $recordenrol9->userid = $user2->id;
@@ -1044,6 +1066,7 @@ class local_eudest_testcase extends advanced_testcase {
         $recordenrol9->pend_convalidation = 0;
         $recordenrol9->intensive = 0;
         $recordenrol9->masterid = 0;
+        $recordenrol9->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $recordenrol9);
         $recordenrol10 = new stdClass();
         $recordenrol10->userid = $user2->id;
@@ -1057,6 +1080,7 @@ class local_eudest_testcase extends advanced_testcase {
         $recordenrol10->pend_convalidation = 0;
         $recordenrol10->intensive = 0;
         $recordenrol10->masterid = 0;
+        $recordenrol10->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $recordenrol10);
         $recordenrol11 = new stdClass();
         $recordenrol11->userid = $user2->id;
@@ -1070,6 +1094,7 @@ class local_eudest_testcase extends advanced_testcase {
         $recordenrol11->pend_convalidation = 0;
         $recordenrol11->intensive = 1;
         $recordenrol11->masterid = 0;
+        $recordenrol11->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $recordenrol11);
 
         // Admin capability to update the calendar.
@@ -1115,12 +1140,18 @@ class local_eudest_testcase extends advanced_testcase {
         $startdate = time();
 
         // Testing the function with the initial settings.
-        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category1->id, 'to1', 'target1', 'type1', $startdate));
-        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category2->id, 'to1', 'target1', 'type1', $startdate));
-        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category3->id, 'to1', 'target1', 'type1', $startdate));
-        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category1->id, 'to1', 'target1', 'type2', $startdate));
-        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category1->id, 'to1', 'target2', 'type2', $startdate));
-        $this->invoke_method($instance1, 'eude_add_message_to_stack', array($category1->id, 'to2', 'target1', 'type2', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array(
+            $category1->id, null, 'to1', 'target1', 'type1', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array(
+            $category2->id, null, 'to1', 'target1', 'type1', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array(
+            $category3->id, null, 'to1', 'target1', 'type1', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array(
+            $category1->id, null, 'to1', 'target1', 'type2', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array(
+            $category1->id, null, 'to1', 'target2', 'type2', $startdate));
+        $this->invoke_method($instance1, 'eude_add_message_to_stack', array(
+            $category1->id, null, 'to2', 'target1', 'type2', $startdate));
 
         // Checking asserts.
         $expectedresult = $DB->get_records('local_eudest_msgs');
@@ -1282,6 +1313,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record1->pend_convalidation = 0;
         $record1->intensive = 0;
         $record1->masterid = 0;
+        $record1->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record1);
         $recordone = $DB->get_record('local_eudest_enrols', array());
         $identif = $recordone->id;
@@ -1297,6 +1329,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record2->pend_convalidation = 1;
         $record2->intensive = 0;
         $record2->masterid = 0;
+        $record2->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record2);
         $record3 = new stdClass();
         $record3->userid = $user1->id;
@@ -1310,6 +1343,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record3->pend_convalidation = 1;
         $record3->intensive = 0;
         $record3->masterid = 0;
+        $record3->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record3);
         $record4 = new stdClass();
         $record4->userid = $user1->id;
@@ -1323,6 +1357,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record4->pend_convalidation = 0;
         $record4->intensive = 0;
         $record4->masterid = 0;
+        $record4->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record4);
         $record5 = new stdClass();
         $record5->userid = $user2->id;
@@ -1336,6 +1371,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record5->pend_convalidation = 1;
         $record5->intensive = 0;
         $record5->masterid = 0;
+        $record5->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record5);
         $record6 = new stdClass();
         $record6->userid = $user2->id;
@@ -1349,6 +1385,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record6->pend_convalidation = 0;
         $record6->intensive = 0;
         $record6->masterid = 0;
+        $record6->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record6);
         $record7 = new stdClass();
         $record7->userid = $user2->id;
@@ -1362,6 +1399,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record7->pend_convalidation = 0;
         $record7->intensive = 0;
         $record7->masterid = 0;
+        $record7->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record7);
         $record8 = new stdClass();
         $record8->userid = $user2->id;
@@ -1375,6 +1413,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record8->pend_convalidation = 0;
         $record8->intensive = 0;
         $record8->masterid = 0;
+        $record8->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record8);
         $record9 = new stdClass();
         $record9->userid = $user2->id;
@@ -1388,6 +1427,7 @@ class local_eudest_testcase extends advanced_testcase {
         $record9->pend_convalidation = 1;
         $record9->intensive = 0;
         $record9->masterid = 0;
+        $record9->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record9);
 
         // Creating grade_categories for the courses.
@@ -1419,15 +1459,16 @@ class local_eudest_testcase extends advanced_testcase {
             'itemtype' => 'course', 'courseid' => $course6mod3->id, 'category' => $category1->id));
 
         $sqlitems = "SELECT *
-                            FROM {grade_items}
-                           WHERE itemtype = :type
-                             AND courseid = :courseid
-                             AND iteminstance IS NOT NULL";
+                       FROM {grade_items}
+                      WHERE itemtype = :type
+                            AND courseid = :courseid
+                            AND iteminstance IS NOT NULL";
         $grade1 = $DB->get_record_sql($sqlitems, array('type' => 'course', 'courseid' => $course1mod1->id));
         $grade2 = $DB->get_record_sql($sqlitems, array('type' => 'course', 'courseid' => $course2mod2->id));
         $grade3 = $DB->get_record_sql($sqlitems, array('type' => 'course', 'courseid' => $course3mod1->id));
         $grade4 = $DB->get_record_sql($sqlitems, array('type' => 'course', 'courseid' => $course4mod2->id));
         $grade5 = $DB->get_record_sql($sqlitems, array('type' => 'course', 'courseid' => $course5mod3->id));
+        $grade6 = $DB->get_record_sql($sqlitems, array('type' => 'course', 'courseid' => $course6mod3->id));
 
         $grades1 = new stdClass();
         $grades1->itemid = $grade1->id;
@@ -1463,8 +1504,8 @@ class local_eudest_testcase extends advanced_testcase {
                        FROM {grade_items} gi
                        JOIN {grade_grades} gg on gg.itemid = gi.id
                        JOIN {course} c on gi.courseid = c.id
-                      WHERE gi.itemtype = 'course'";
-        $grades = $DB->get_records_sql($sqlgrade, array());
+                      WHERE gi.itemtype = :itemtype";
+        $grades = $DB->get_records_sql($sqlgrade, array('itemtype' => 'course'));
         $this->assertCount(5, $grades);
 
         // Test data of 'local_eudest_enrols' table.
@@ -1542,7 +1583,7 @@ class local_eudest_testcase extends advanced_testcase {
         $category2 = $this->getDataGenerator()->create_category(array('name' => 'Category 2'));
 
         $course1 = $this->getDataGenerator()->create_course(array('shortname' => 'Course 1', 'category' => $category1->id));
-        $this->getDataGenerator()->create_course(array('shortname' => 'MI.Course 1', 'category' => $category2->id));
+        $course2 = $this->getDataGenerator()->create_course(array('shortname' => 'MI.Course 1', 'category' => $category2->id));
 
         $manualinstance = self::create_manual_instance($course1->id);
         $manualplugin->enrol_user($manualinstance, $user1->id, $studentrole->id, $today - (10 * $month), $today - (5 * $month));
@@ -1868,7 +1909,6 @@ class local_eudest_testcase extends advanced_testcase {
         $CFG->local_eudest_inac18text = 'Inactive 18 months Text';
         $CFG->local_eudest_inac24rmtext = 'Inactive 24 months Responsable Master Text';
         $CFG->local_eudest_inac24sttext = 'Inactive 24 months Student Text';
-        $CFG->wwwroot = 'http://192.168.1.26/moodle30';
 
         $today = strtotime(date('Y-m-d', time()));
         $managerrole = $DB->get_record('role', array('shortname' => 'manager'));
@@ -1976,6 +2016,8 @@ class local_eudest_testcase extends advanced_testcase {
 
         $this->invoke_method($instance1, 'eude_send_scheduled_messages', array());
 
+        $test = $DB->get_records('local_eudest_msgs', array());
+
         // Test Sended messages after use the function.
         $messages5 = $DB->get_records('local_eudest_msgs', array());
         $this->assertCount(0, $messages5);
@@ -2057,7 +2099,7 @@ class local_eudest_testcase extends advanced_testcase {
         $this->set_protected($instance1, 'eudeconfig', $eudeconf);
 
         // Creating a new type of role.
-        $this->getDataGenerator()->create_role(array('shortname' => 'studentval'));
+        $roleid = $this->getDataGenerator()->create_role(array('shortname' => 'studentval'));
 
         // Creating user.
         $user1 = $this->getDataGenerator()->create_user(array('username' => 'usuario 1', 'email' => 'user1@php.com'));
@@ -2075,12 +2117,15 @@ class local_eudest_testcase extends advanced_testcase {
         // Enrol user in course.
         $studentrole = self::get_student_role();
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id, $studentrole->id, 'manual');
+        $this->getDataGenerator()->enrol_user($user1->id, $course2->id, $studentrole->id, 'manual');
+        $this->getDataGenerator()->enrol_user($user1->id, $course3->id, $studentrole->id, 'manual');
+        $this->getDataGenerator()->enrol_user($user1->id, $course4->id, $studentrole->id, 'manual');
 
         // Creating quizs.
-        $this->getDataGenerator()->create_module('quiz', array('course' => $course1->id));
-        $this->getDataGenerator()->create_module('quiz', array('course' => $course2->id));
-        $this->getDataGenerator()->create_module('quiz', array('course' => $course3->id));
-        $this->getDataGenerator()->create_module('quiz', array('course' => $course4->id));
+        $quiz1 = $this->getDataGenerator()->create_module('quiz', array('course' => $course1->id));
+        $quiz2 = $this->getDataGenerator()->create_module('quiz', array('course' => $course2->id));
+        $quiz3 = $this->getDataGenerator()->create_module('quiz', array('course' => $course3->id));
+        $quiz4 = $this->getDataGenerator()->create_module('quiz', array('course' => $course4->id));
 
         // Getting grade item id from each quiz.
         $itemid1 = $DB->get_record('grade_items', array('itemtype' => 'course', 'courseid' => $course1->id));
@@ -2143,6 +2188,64 @@ class local_eudest_testcase extends advanced_testcase {
 
         $inserttest = $DB->get_record('grade_grades', array('userid' => $user1->id, 'itemid' => $itemid4->id));
         $this->assertEquals($inserttest->finalgrade, '70.00000');
+
+        // We insert new entries in table local_eudest_enrols to recover the enrols relevant to the function.
+        $eudestenrol1 = new stdClass();
+        $eudestenrol1->userid = $user1->id;
+        $eudestenrol1->courseid = $course1->id;
+        $eudestenrol1->shortname = $course1->shortname;
+        $eudestenrol1->categoryid = $category1->id;
+        $eudestenrol1->startdate = time() - 4000;
+        $eudestenrol1->enddate = time() + 4000;
+        $eudestenrol1->pend_event = 0;
+        $eudestenrol1->pend_encapsulation = 0;
+        $eudestenrol1->pend_convalidation = 0;
+        $eudestenrol1->intensive = 0;
+        $eudestenrol1->masterid = 0;
+        $eudestenrol1->pend_int_messages = 0;
+        $DB->insert_record('local_eudest_enrols', $eudestenrol1);
+        $eudestenrol2 = new stdClass();
+        $eudestenrol2->userid = $user1->id;
+        $eudestenrol2->courseid = $course2->id;
+        $eudestenrol2->shortname = $course2->shortname;
+        $eudestenrol2->categoryid = $category2->id;
+        $eudestenrol2->startdate = time() - 4000;
+        $eudestenrol2->enddate = time() + 4000;
+        $eudestenrol2->pend_event = 0;
+        $eudestenrol2->pend_encapsulation = 0;
+        $eudestenrol2->pend_convalidation = 0;
+        $eudestenrol2->intensive = 1;
+        $eudestenrol2->masterid = 0;
+        $eudestenrol2->pend_int_messages = 0;
+        $DB->insert_record('local_eudest_enrols', $eudestenrol2);
+        $eudestenrol3 = new stdClass();
+        $eudestenrol3->userid = $user1->id;
+        $eudestenrol3->courseid = $course3->id;
+        $eudestenrol3->shortname = $course3->shortname;
+        $eudestenrol3->categoryid = $category2->id;
+        $eudestenrol3->startdate = time() - 4000;
+        $eudestenrol3->enddate = time() + 4000;
+        $eudestenrol3->pend_event = 0;
+        $eudestenrol3->pend_encapsulation = 0;
+        $eudestenrol3->pend_convalidation = 0;
+        $eudestenrol3->intensive = 0;
+        $eudestenrol3->masterid = 0;
+        $eudestenrol3->pend_int_messages = 0;
+        $DB->insert_record('local_eudest_enrols', $eudestenrol3);
+        $eudestenrol4 = new stdClass();
+        $eudestenrol4->userid = $user1->id;
+        $eudestenrol4->courseid = $course4->id;
+        $eudestenrol4->shortname = $course4->shortname;
+        $eudestenrol4->categoryid = $category2->id;
+        $eudestenrol4->startdate = time() - 4000;
+        $eudestenrol4->enddate = time() + 4000;
+        $eudestenrol4->pend_event = 0;
+        $eudestenrol4->pend_encapsulation = 0;
+        $eudestenrol4->pend_convalidation = 0;
+        $eudestenrol4->intensive = 1;
+        $eudestenrol4->masterid = 0;
+        $eudestenrol4->pend_int_messages = 0;
+        $DB->insert_record('local_eudest_enrols', $eudestenrol4);
 
         $this->invoke_method($instance1, 'eude_override_califications');
 

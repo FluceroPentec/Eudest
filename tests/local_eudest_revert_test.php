@@ -88,6 +88,7 @@ class local_eudest_revert_testcase extends advanced_testcase {
         $record1->pend_convalidation = 0;
         $record1->intensive = 0;
         $record1->masterid = 0;
+        $record1->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record1);
         $record2 = new stdClass();
         $record2->userid = $user1->id;
@@ -101,6 +102,7 @@ class local_eudest_revert_testcase extends advanced_testcase {
         $record2->pend_convalidation = 0;
         $record2->intensive = 0;
         $record2->masterid = 0;
+        $record2->pend_int_messages = 0;
         $DB->insert_record('local_eudest_enrols', $record2);
 
         // Create events for user1.

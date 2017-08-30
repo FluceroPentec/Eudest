@@ -38,25 +38,25 @@ class local_eudest_revert {
      * Name of the plugin
      * @var string $pluginname
      */
-    private $pluginname = "local_eudest";
+    private $pluginname = 'local_eudest';
 
     /**
      * Tag to identify the common course of a master
      * @var string $commoncoursetag
      */
-    private $commoncoursetag = ".M00";
+    private $commoncoursetag = '.M00';
 
     /**
      * Tag to identify the intensive courses
      * @var string $intensivetag
      */
-    private $intensivetag = "MI";
+    private $intensivetag = 'MI';
 
     /**
      * Tag to identify a module of a master
      * @var string $moduletag
      */
-    private $moduletag = ".M";
+    private $moduletag = '.M';
 
     /**
      * Method for revert data
@@ -86,8 +86,8 @@ class local_eudest_revert {
                   JOIN {enrol} e ON e.id = ue.enrolid AND e.courseid = ct.instanceid
                   JOIN {course} c ON c.id = e.courseid
                  WHERE c.category = :categoryid
-                   AND r.shortname like '%student%'
-                   AND ue.timestart >= :timestart
+                       AND r.shortname like '%student%'
+                       AND ue.timestart >= :timestart
               ORDER BY ue.id ASC";
         $records = $DB->get_records_sql($sql, array('categoryid' => $categoryid, 'timestart' => $timestart));
         if (!$records) {
@@ -106,9 +106,8 @@ class local_eudest_revert {
      * @param int $timestart Time start to find the records
      */
     private function eude_revert_user($categoryid, $userid, $timestart) {
-        global $DB;
         // Delete events of user master.
-        $this->eude_revert_delete_events($userid, $timestart, "[[COURSE]]");
+        $this->eude_revert_delete_events($userid, $timestart, '[[COURSE]]');
 
         // Delete scheduled messages.
         $this->eude_revert_delete_messages($categoryid, $userid);
@@ -143,11 +142,11 @@ class local_eudest_revert {
         $sql = "SELECT *
                   FROM {event}
                  WHERE userid = :userid
-                   AND eventtype = 'user'
-                   AND name like CONCAT('$type', '%')
-                   AND timestart >= :timestart
+                       AND eventtype = :eventtype
+                       AND name like CONCAT('$type', '%')
+                       AND timestart >= :timestart
               ORDER BY id ASC";
-        $records = $DB->get_records_sql($sql, array('userid' => $userid, 'timestart' => $timestart));
+        $records = $DB->get_records_sql($sql, array('userid' => $userid, 'eventtype' => 'user', 'timestart' => $timestart));
         foreach ($records as $record) {
             $eventid = $record->id;
             $event = calendar_event::load($eventid);
@@ -164,10 +163,10 @@ class local_eudest_revert {
         global $DB;
         $sqldel1 = "categoryid = :categoryid
                      AND msgto = :msgto";
-        $DB->delete_records_select("local_eudest_msgs", $sqldel1, array("categoryid" => $categoryid, "msgto" => $userid));
+        $DB->delete_records_select('local_eudest_msgs', $sqldel1, array('categoryid' => $categoryid, 'msgto' => $userid));
         $sqldel2 = "categoryid = :categoryid
                  AND msgtarget = :msgtarget";
-        $DB->delete_records_select("local_eudest_msgs", $sqldel2, array("categoryid" => $categoryid, "msgtarget" => $userid));
+        $DB->delete_records_select('local_eudest_msgs', $sqldel2, array('categoryid' => $categoryid, 'msgtarget' => $userid));
     }
 
     /**
@@ -179,10 +178,10 @@ class local_eudest_revert {
         global $DB;
 
         // Delete enrolments encapsulations.
-        $DB->delete_records("local_eudest_masters", array("categoryid" => $categoryid, "userid" => $userid));
+        $DB->delete_records('local_eudest_masters', array('categoryid' => $categoryid, 'userid' => $userid));
 
         // Delete enrolments.
-        $DB->delete_records("local_eudest_enrols", array("categoryid" => $categoryid, "userid" => $userid));
+        $DB->delete_records('local_eudest_enrols', array('categoryid' => $categoryid, 'userid' => $userid));
 
         // Recalculate dates of enrols.
         $mintime = 0;
@@ -194,8 +193,8 @@ class local_eudest_revert {
                   JOIN {enrol} e ON e.id = ue.enrolid AND e.courseid = ct.instanceid
                   JOIN {course} c ON c.id = e.courseid
                  WHERE ue.userid=:userid
-                   AND c.category=:categoryid
-              ORDER BY timestart asc";
+                       AND c.category=:categoryid
+              ORDER BY timestart ASC";
         $records = $DB->get_records_sql($sql, array('userid' => $userid, 'categoryid' => $categoryid));
         foreach ($records as $record) {
             if ($mintime == 0) {
@@ -229,8 +228,8 @@ class local_eudest_revert {
             }
             $enrol->pend_encapsulation = $pdteencapsulation;
             $pdteconvalidation = 1;
-            $pos1 = strrpos($record->shortname, "[-");
-            $pos2 = strrpos($record->shortname, "-]");
+            $pos1 = strrpos($record->shortname, '[-');
+            $pos2 = strrpos($record->shortname, '-]');
             if ($pos1 == false || $pos2 == false) {
                 $pdteconvalidation = 0;
             }
@@ -242,6 +241,7 @@ class local_eudest_revert {
             }
             $enrol->intensive = $intensive;
             $enrol->masterid = 0;
+            $enrol->pend_int_messages = 0;
             $DB->insert_record('local_eudest_enrols', $enrol, false);
         }
     }
