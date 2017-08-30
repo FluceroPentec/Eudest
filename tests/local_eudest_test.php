@@ -1517,7 +1517,7 @@ class local_eudest_testcase extends advanced_testcase {
         // Testing the function when convalidation is not allowed.
         $this->invoke_method($instance1, 'eude_convalidate_modules', array());
 
-        $othergrades = $DB->get_records_sql($sqlgrade, array());
+        $othergrades = $DB->get_records_sql($sqlgrade, array('itemtype' => 'course'));
         $this->assertCount(5, $othergrades);
 
         // Setting the initial CFG parameter to allow convalidations.
@@ -1533,7 +1533,7 @@ class local_eudest_testcase extends advanced_testcase {
         $this->assertEquals(0, $expected[$identif + 2]->pend_convalidation);
         $this->assertEquals(0, $expected[$identif + 4]->pend_convalidation);
 
-        $newgrades = $DB->get_records_sql($sqlgrade, array());
+        $newgrades = $DB->get_records_sql($sqlgrade, array('itemtype' => 'course'));
         $this->assertCount(8, $newgrades);
 
         // Testing the function with a module not passed.
@@ -1542,7 +1542,7 @@ class local_eudest_testcase extends advanced_testcase {
         $newexpected = $DB->get_records('local_eudest_enrols');
         $this->assertEquals(0, $newexpected[$identif + 8]->pend_convalidation);
 
-        $lastgrades = $DB->get_records_sql($sqlgrade, array());
+        $lastgrades = $DB->get_records_sql($sqlgrade, array('itemtype' => 'course'));
         $this->assertCount(8, $lastgrades);
     }
 
