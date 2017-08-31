@@ -147,13 +147,6 @@ class local_eudest_testcase extends advanced_testcase {
         $this->assertEquals(700000, $result->last_inactivity_date);
         $this->assertEquals(10000000, $result->last_califications_date);
 
-        // Testing the function with the data reseted.
-        $this->resetAllData();
-        $this->invoke_method($instance1, 'eude_load_configuration', array());
-        $result = $this->access_protected($instance1, 'eudeconfig');
-        $this->assertEquals(0, $result->last_enrolid);
-        $this->assertEquals(0, $result->last_inactivity_date);
-        $this->assertEquals(0, $result->last_califications_date);
     }
 
     /**
