@@ -39,7 +39,7 @@
                 <INDEX NAME="idx_int_pendmess" UNIQUE="false" FIELDS="intensive, pend_int_messages"/>
                 <INDEX NAME="idx_courseshortname_user" UNIQUE="true" FIELDS="shortname, userid"/>
                 <INDEX NAME="idx_pend_cat_usr" UNIQUE="false" FIELDS="pend_event, categoryid, userid"/>
-                <INDEX NAME="idx_user_course" UNIQUE="true" FIELDS="userid, courseid"/>
+                <INDEX NAME="idx_user_course_start" UNIQUE="true" FIELDS="userid, courseid, startdate"/>
                 <INDEX NAME="idx_userid" UNIQUE="false" FIELDS="userid"/>
                 <INDEX NAME="idx_courseid" UNIQUE="false" FIELDS="courseid"/>
                 <INDEX NAME="idx_pend_enc_userid" UNIQUE="false" FIELDS="pend_encapsulation, userid"/>
@@ -69,7 +69,7 @@
                 <INDEX NAME="idx_user_inactivity18" UNIQUE="false" FIELDS="userid, inactivity18"/>
                 <INDEX NAME="idx_user_cat_dates" UNIQUE="true" FIELDS="userid, categoryid, startdate, enddate"/>
                 <INDEX NAME="idx_user" UNIQUE="false" FIELDS="userid"/>
-                <INDEX NAME="idx_user_category" UNIQUE="true" FIELDS="userid, categoryid"/>
+                <INDEX NAME="idx_user_category" UNIQUE="false" FIELDS="userid, categoryid"/>
             </INDEXES>
         </TABLE>
         <TABLE NAME="local_eudest_msgs" COMMENT="generateds messages by the task">
